@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>协调决策引擎 · 控制台</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --ink:#1E2A38; --paper:#EEF1F0; --panel:#FFFFFF; --line:#D9DDDB; --slate:#5B6570;
+  --teal:#2F6F62; --teal-bg:#E4F0EC;
+  --amber:#C98A3E; --amber-bg:#FBF0E1;
+  --brick:#A64B3B; --brick-bg:#F7E8E5;
+  --violet:#5B5A9C; --violet-bg:#ECEBF5;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);font-family:'IBM Plex Sans',sans-serif;color:var(--ink);padding:48px 24px;}
+.wrap{max-width:1120px;margin:0 auto;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--slate);text-transform:uppercase;}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:32px;margin:8px 0 6px;}
+.sub{color:var(--slate);font-size:14.5px;margin-bottom:36px;max-width:640px;line-height:1.6;}
+
+.section-label{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--slate);letter-spacing:1.5px;margin:36px 0 14px;display:flex;align-items:center;gap:10px;}
+.section-label::after{content:"";flex:1;height:1px;background:var(--line);}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+
+.card{
+  background:var(--panel);border:1px solid var(--line);border-radius:4px;
+  padding:20px;text-decoration:none;color:var(--ink);display:block;
+  transition:border-color .15s, transform .15s;position:relative;overflow:hidden;
+}
+.card:hover{border-color:var(--ink);transform:translateY(-2px);}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;}
+.card.meeting::before{background:var(--teal);}
+.card.queue::before{background:var(--violet);}
+.card.hub::before{background:var(--brick);}
+.card.diagram::before{background:var(--amber);}
+.card.doc::before{background:var(--slate);}
+
+.card .tag{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;padding:2px 8px;border-radius:8px;
+  display:inline-block;margin-bottom:10px;
+}
+.card.meeting .tag{background:var(--teal-bg);color:var(--teal);}
+.card.queue .tag{background:var(--violet-bg);color:var(--violet);}
+.card.hub .tag{background:var(--brick-bg);color:var(--brick);}
+.card.diagram .tag{background:var(--amber-bg);color:var(--amber);}
+.card.doc .tag{background:#EDEEEF;color:var(--slate);}
+
+.card h3{font-family:'Space Grotesk',sans-serif;font-size:16.5px;margin:0 0 8px;}
+.card p{font-size:12.5px;color:var(--slate);line-height:1.55;margin:0 0 14px;}
+.card .go{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink);display:flex;align-items:center;gap:4px;}
+.card:hover .go{color:var(--teal);}
+
+.status{display:flex;gap:16px;margin-top:36px;padding:16px 20px;background:var(--panel);border:1px solid var(--line);border-radius:4px;flex-wrap:wrap;}
+.status .s{font-size:12.5px;color:var(--slate);display:flex;align-items:center;gap:6px;}
+.status .s b{color:var(--ink);font-family:'Space Grotesk',sans-serif;}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">CONSOLE — 体系总览</div>
+  <h1>协调决策引擎</h1>
+  <div class="sub">从两个真实业务场景出发，抽象出一套可复用的协调决策引擎。以下是当前已接入的模块与体系支持材料，点击卡片进入对应界面。</div>
+
+  <div class="status">
+    <div class="s"><span class="dot" style="background:var(--teal)"></span>已接入模块 <b>2</b></div>
+    <div class="s"><span class="dot" style="background:var(--brick)"></span>待处理升级事项 <b>2</b></div>
+    <div class="s"><span class="dot" style="background:var(--slate)"></span>规则库沉淀条目 <b>2</b></div>
+  </div>
+
+  <div class="section-label">业务模块</div>
+  <div class="grid">
+    <a class="card meeting" href="modules/meeting-board.html">
+      <span class="tag">场景一 · 已接入</span>
+      <h3>会议协调看板</h3>
+      <p>多方日程冲突下的候选时段匹配、有效性判定与升级触发</p>
+      <span class="go">进入模块 →</span>
+    </a>
+    <a class="card queue" href="modules/leader-queue.html">
+      <span class="tag">场景二 · 已接入</span>
+      <h3>领导时间申请队列</h3>
+      <p>多个申请争抢稀缺时间资源时的优先级排序与仲裁</p>
+      <span class="go">进入模块 →</span>
+    </a>
+    <a class="card queue" style="opacity:.5;pointer-events:none;" href="#">
+      <span class="tag" style="background:#EDEEEF;color:var(--slate)">待接入</span>
+      <h3>新模块…</h3>
+      <p>按同一套引擎接入下一个协调决策场景</p>
+      <span class="go">规划中</span>
+    </a>
+  </div>
+
+  <div class="section-label">体系枢纽</div>
+  <div class="grid">
+    <a class="card hub" href="hub/escalation-inbox.html">
+      <span class="tag">枢纽层</span>
+      <h3>统一升级仲裁收件箱</h3>
+      <p>汇总全部模块的「需要人判断」事项，按统一格式集中处理</p>
+      <span class="go">进入收件箱 →</span>
+    </a>
+  </div>
+
+  <div class="section-label">架构与支持材料</div>
+  <div class="grid">
+    <a class="card diagram" href="diagrams/meeting-flow.svg">
+      <span class="tag">流程图</span>
+      <h3>会议协调决策流程</h3>
+      <p>场景一从征询发起到升级判断的完整链路</p>
+      <span class="go">查看图示 →</span>
+    </a>
+    <a class="card diagram" href="diagrams/engine-architecture.svg">
+      <span class="tag">架构图</span>
+      <h3>六层引擎架构</h3>
+      <p>标注通用层与模块专属层，及规则沉淀反馈闭环</p>
+      <span class="go">查看图示 →</span>
+    </a>
+    <a class="card doc" href="docs/case-study.md">
+      <span class="tag">案例文档</span>
+      <h3>完整案例说明</h3>
+      <p>问题背景、方案设计、体系化思路的完整文字记录</p>
+      <span class="go">阅读文档 →</span>
+    </a>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>领导时间申请队列 · 原型</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --ink:#1E2A38; --paper:#EEF1F0; --panel:#FFFFFF; --line:#D9DDDB; --slate:#5B6570;
+  --teal:#2F6F62; --teal-bg:#E4F0EC;
+  --amber:#C98A3E; --amber-bg:#FBF0E1;
+  --brick:#A64B3B; --brick-bg:#F7E8E5;
+  --violet:#5B5A9C; --violet-bg:#ECEBF5;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);font-family:'IBM Plex Sans',sans-serif;color:var(--ink);padding:40px 24px;}
+.wrap{max-width:1080px;margin:0 auto;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--slate);text-transform:uppercase;}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;margin:6px 0 4px;}
+.sub{color:var(--slate);font-size:14px;margin-bottom:20px;}
+
+.saturation{
+  background:var(--panel);border:1px solid var(--line);border-radius:4px;
+  padding:16px 20px;margin-bottom:22px;display:flex;align-items:center;gap:20px;
+}
+.saturation .bar{flex:1;height:10px;background:var(--line);border-radius:5px;overflow:hidden;}
+.saturation .bar i{display:block;height:100%;background:var(--brick);width:92%;}
+.saturation .num{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;}
+.saturation .label{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--slate);}
+
+.queue{background:var(--panel);border:1px solid var(--line);border-radius:4px;overflow:hidden;}
+.qhead{display:grid;grid-template-columns:36px 1.6fr 1fr 100px 110px 130px 140px;padding:10px 16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--slate);background:#F5F6F5;border-bottom:1px solid var(--line);}
+.qrow{display:grid;grid-template-columns:36px 1.6fr 1fr 100px 110px 130px 140px;padding:14px 16px;border-bottom:1px solid var(--line);align-items:center;font-size:13px;}
+.qrow:last-child{border-bottom:none;}
+.qrow.merge{background:var(--violet-bg);}
+.qrow.escalate{background:var(--brick-bg);}
+.rank{font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--slate);}
+.who b{display:block;font-size:13.5px;}
+.who span{font-size:11.5px;color:var(--slate);}
+.topic{font-size:12.5px;color:var(--slate);}
+.urgency{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:3px 8px;border-radius:8px;display:inline-block;text-align:center;}
+.urgency.high{background:var(--brick-bg);color:var(--brick);}
+.urgency.mid{background:var(--amber-bg);color:var(--amber);}
+.urgency.low{background:#EDEEEF;color:var(--slate);}
+.wait{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--slate);}
+.score{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;}
+.status{font-size:12px;}
+.status .dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:6px;}
+.status.wait .dot{background:var(--slate);}
+.status.merge .dot{background:var(--violet);}
+.status.scheduled .dot{background:var(--teal);}
+.status.escalate .dot{background:var(--brick);}
+
+.note{margin-top:20px;padding:16px 20px;border-radius:4px;background:var(--panel);border:1px solid var(--line);font-size:13px;color:var(--slate);}
+.note b{color:var(--ink);}
+
+.section-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;margin:32px 0 10px;}
+.principle{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.pcard{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:16px;}
+.pcard .k{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--teal);}
+.pcard .t{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14.5px;margin:4px 0 6px;}
+.pcard .d{font-size:12.5px;color:var(--slate);line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">PROTOTYPE — 场景二</div>
+  <h1>刘总时间申请队列</h1>
+  <div class="sub">多位员工同时申请占用领导时间时的排序与仲裁逻辑</div>
+
+  <div class="saturation">
+    <div class="label">本周日程饱和度</div>
+    <div class="bar"><i></i></div>
+    <div class="num">92%</div>
+    <div class="label">仅剩 2 个 30 分钟空档</div>
+  </div>
+
+  <div class="queue">
+    <div class="qhead"><div>#</div><div>申请人 / 事项</div><div>主题标签</div><div>紧急度</div><div>已等待</div><div>优先级得分</div><div>状态</div></div>
+
+    <div class="qrow">
+      <div class="rank">01</div>
+      <div class="who"><b>陈工</b><span>合同审批卡点，客户今晚要回复</span></div>
+      <div class="topic">合同 / 客户</div>
+      <div class="urgency high">高</div>
+      <div class="wait">2 小时</div>
+      <div class="score">92</div>
+      <div class="status scheduled"><span class="dot"></span>已安排 · 明 10:00</div>
+    </div>
+
+    <div class="qrow merge">
+      <div class="rank">02</div>
+      <div class="who"><b>王工</b><span>Q3 预算方案确认</span></div>
+      <div class="topic">预算 / 决策</div>
+      <div class="urgency mid">中</div>
+      <div class="wait">5 小时</div>
+      <div class="score">76</div>
+      <div class="status merge"><span class="dot"></span>建议与 #03 合并</div>
+    </div>
+
+    <div class="qrow merge">
+      <div class="rank">03</div>
+      <div class="who"><b>李工</b><span>Q3 预算方案的另一部分待确认</span></div>
+      <div class="topic">预算 / 决策</div>
+      <div class="urgency mid">中</div>
+      <div class="wait">3 小时</div>
+      <div class="score">74</div>
+      <div class="status merge"><span class="dot"></span>建议与 #02 合并</div>
+    </div>
+
+    <div class="qrow">
+      <div class="rank">04</div>
+      <div class="who"><b>周工</b><span>周报确认，无明确截止时间</span></div>
+      <div class="topic">日常汇报</div>
+      <div class="urgency low">低</div>
+      <div class="wait">1 天</div>
+      <div class="score">38</div>
+      <div class="status wait"><span class="dot"></span>建议改为简报审阅</div>
+    </div>
+
+    <div class="qrow escalate">
+      <div class="rank">05</div>
+      <div class="who"><b>吴工</b><span>供应商合同今日必须拍板</span></div>
+      <div class="topic">合同 / 供应商</div>
+      <div class="urgency high">高</div>
+      <div class="wait">40 分钟</div>
+      <div class="score">91</div>
+      <div class="status escalate"><span class="dot"></span>与 #01 同级紧急 · 已升级</div>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>升级摘要（推送给秘书）：</b> #01 陈工与 #05 吴工优先级得分相近（92 / 91），均为客户/合同类高紧急事项，但今日日程仅剩 1 个可用空档。系统无法自主判断二者优先级，需人工确认哪一项更紧急，或是否可安排合并简短沟通。
+  </div>
+
+  <div class="section-title">排序与仲裁逻辑</div>
+  <div class="principle">
+    <div class="pcard">
+      <div class="k">RULE 01</div>
+      <div class="t">优先级得分</div>
+      <div class="d">紧急程度 × 权重 + 已等待时长修正，避免长期被压后的事项永远排不上</div>
+    </div>
+    <div class="pcard">
+      <div class="k">RULE 02</div>
+      <div class="t">同主题合并建议</div>
+      <div class="d">识别相近主题的多个申请，建议合并为一次沟通，减少领导时间碎片化占用</div>
+    </div>
+    <div class="pcard">
+      <div class="k">RULE 03</div>
+      <div class="t">饱和时的替代方案</div>
+      <div class="d">日历排满时不直接回绝，而是建议简报审阅、压缩形式等替代方案</div>
+    </div>
+    <div class="pcard">
+      <div class="k">RULE 04</div>
+      <div class="t">透明度反馈</div>
+      <div class="d">向申请人说明排序依据（脱敏），减少重复追问协调者的成本</div>
+    </div>
+    <div class="pcard">
+      <div class="k">RULE 05</div>
+      <div class="t">升级触发</div>
+      <div class="d">得分相近且日历确实排不下时，Agent 停止自主判断，整理摘要交由人拍板</div>
+    </div>
+    <div class="pcard">
+      <div class="k">RULE 06</div>
+      <div class="t">规则复用</div>
+      <div class="d">优先级权重与合并规则可按领导/团队预设，同类场景无需重复配置</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

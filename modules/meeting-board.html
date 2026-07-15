@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>会议协调看板 v2 · 原型</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --ink:#1E2A38; --paper:#EEF1F0; --panel:#FFFFFF; --line:#D9DDDB; --slate:#5B6570;
+  --teal:#2F6F62; --teal-bg:#E4F0EC;
+  --amber:#C98A3E; --amber-bg:#FBF0E1;
+  --brick:#A64B3B; --brick-bg:#F7E8E5;
+  --violet:#5B5A9C; --violet-bg:#ECEBF5;
+  --grey-bg:#EDEEEF;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);font-family:'IBM Plex Sans',sans-serif;color:var(--ink);padding:40px 24px;}
+.wrap{max-width:1080px;margin:0 auto;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--slate);text-transform:uppercase;}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;margin:6px 0 4px;}
+.sub{color:var(--slate);font-size:14px;margin-bottom:20px;}
+
+.meta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px;align-items:center;}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:3px;padding:8px 14px;font-size:13px;}
+.chip b{font-family:'IBM Plex Mono',monospace;color:var(--ink);}
+.toggle{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--slate);margin-left:auto;}
+.toggle input{accent-color:var(--ink);}
+
+.board{background:var(--panel);border:1px solid var(--line);border-radius:4px;overflow:hidden;}
+.board-header{display:grid;grid-template-columns:230px repeat(4,1fr);border-bottom:1px solid var(--line);}
+.board-header .cell{padding:12px 12px 14px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--slate);border-left:1px solid var(--line);cursor:pointer;transition:background .15s;position:relative;}
+.board-header .cell:first-child{border-left:none;color:var(--ink);font-weight:600;font-family:'IBM Plex Sans',sans-serif;}
+.board-header .cell.selected{background:var(--ink);color:#fff;}
+.board-header .cell .rate{display:block;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;margin-top:2px;color:var(--ink);}
+.board-header .cell.selected .rate{color:#fff;}
+.badge{position:absolute;top:8px;right:8px;background:var(--teal);color:#fff;font-size:9.5px;padding:2px 6px;border-radius:8px;font-family:'IBM Plex Sans',sans-serif;letter-spacing:.5px;}
+.progress-mini{height:3px;background:var(--line);border-radius:2px;margin-top:8px;overflow:hidden;}
+.progress-mini i{display:block;height:100%;background:var(--teal);}
+.board-header .cell.selected .progress-mini{background:rgba(255,255,255,.25);}
+
+.row{display:grid;grid-template-columns:230px repeat(4,1fr);border-bottom:1px solid var(--line);}
+.row:last-child{border-bottom:none;}
+.row .who{padding:14px 14px;font-size:13.5px;}
+.row .who .role{display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--slate);margin-top:2px;}
+.row .who.key{border-left:3px solid var(--amber);}
+.cellstat{border-left:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:15px;position:relative;flex-direction:column;gap:2px;}
+.cellstat.ok{background:var(--teal-bg);color:var(--teal);}
+.cellstat.warn{background:var(--amber-bg);color:var(--amber);}
+.cellstat.block{background:var(--brick-bg);color:var(--brick);}
+.cellstat.delegate{background:var(--violet-bg);color:var(--violet);}
+.cellstat.pending{background:var(--grey-bg);color:var(--slate);}
+.cellstat .sub{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.3px;}
+.cellstat .tip{display:none;position:absolute;bottom:110%;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:11.5px;padding:6px 10px;border-radius:3px;white-space:nowrap;z-index:5;}
+.cellstat:hover .tip{display:block;}
+
+.verdict{margin-top:20px;padding:18px 20px;border-radius:4px;display:flex;align-items:center;justify-content:space-between;font-size:14px;gap:16px;flex-wrap:wrap;}
+.verdict.pass{background:var(--teal-bg);border:1px solid var(--teal);}
+.verdict.fail{background:var(--brick-bg);border:1px solid var(--brick);}
+.verdict .label{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;}
+.verdict.pass .label{color:var(--teal);}
+.verdict.fail .label{color:var(--brick);}
+.verdict button{font-family:'IBM Plex Mono',monospace;font-size:12px;background:var(--ink);color:#fff;border:none;padding:8px 14px;border-radius:3px;cursor:pointer;}
+.verdict.pass button{background:var(--teal);}
+
+.legend{margin-top:16px;display:flex;gap:18px;font-size:12px;color:var(--slate);flex-wrap:wrap;}
+.legend span{display:inline-flex;align-items:center;gap:6px;}
+.dot{width:10px;height:10px;border-radius:2px;display:inline-block;}
+
+.section-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;margin:32px 0 10px;}
+.history{background:var(--panel);border:1px solid var(--line);border-radius:4px;}
+.hrow{display:grid;grid-template-columns:140px 1fr 90px 120px;padding:10px 16px;font-size:12.5px;border-bottom:1px solid var(--line);align-items:center;}
+.hrow:last-child{border-bottom:none;}
+.hrow.head{font-family:'IBM Plex Mono',monospace;color:var(--slate);font-size:11px;background:var(--grey-bg);}
+.hrow .tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;padding:2px 8px;border-radius:8px;display:inline-block;}
+.hrow .tag.pass{background:var(--teal-bg);color:var(--teal);}
+.hrow .tag.fail{background:var(--brick-bg);color:var(--brick);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">PROTOTYPE v2 — 协调看板</div>
+  <h1>XX 项目技术评审会 · 时段协调</h1>
+  <div class="sub">候选时段已按预计成功率排序；点击切换查看不同时段；悬停状态格查看详情</div>
+
+  <div class="meta">
+    <div class="chip">要求出席率 <b>≥ 70%</b></div>
+    <div class="chip">关键角色 <b>主席 · 张评委</b> 必须在场或已代理</div>
+    <div class="chip">参会人数 <b>8</b></div>
+    <label class="toggle"><input type="checkbox" id="delegateToggle" checked> 代理出席计入出席率</label>
+  </div>
+
+  <div class="board">
+    <div class="board-header" id="header"></div>
+    <div id="rows"></div>
+  </div>
+
+  <div class="verdict" id="verdict"></div>
+
+  <div class="legend">
+    <span><i class="dot" style="background:var(--teal-bg);border:1px solid var(--teal)"></i>空闲</span>
+    <span><i class="dot" style="background:var(--amber-bg);border:1px solid var(--amber)"></i>存在冲突，待判断</span>
+    <span><i class="dot" style="background:var(--brick-bg);border:1px solid var(--brick)"></i>已接受的重要会议</span>
+    <span><i class="dot" style="background:var(--violet-bg);border:1px solid var(--violet)"></i>已委托代理出席</span>
+    <span><i class="dot" style="background:var(--grey-bg);border:1px solid var(--slate)"></i>待响应</span>
+  </div>
+
+  <div class="section-title">征询历史</div>
+  <div class="history">
+    <div class="hrow head"><div>时间</div><div>候选时段</div><div>出席率</div><div>判定</div></div>
+    <div class="hrow"><div>周二 09:10</div><div>周二 10:00–11:00</div><div>50%</div><div><span class="tag fail">未达标</span></div></div>
+    <div class="hrow"><div>周二 16:20</div><div>周二 15:00–16:00</div><div>63%</div><div><span class="tag fail">关键角色缺席</span></div></div>
+    <div class="hrow"><div>周三 08:40</div><div>本轮 4 个候选时段</div><div>进行中</div><div><span class="tag pass">征询中</span></div></div>
+  </div>
+</div>
+
+<script>
+const slots = [
+  {label:"周三 08:00", time:"08:00–09:00"},
+  {label:"周三 14:00", time:"14:00–15:00"},
+  {label:"周四 09:00", time:"09:00–10:00"},
+  {label:"周四 20:30", time:"20:30–21:30"},
+];
+
+// status: ok / warn / block / delegate / pending
+const people = [
+  {name:"张评委", role:"主席 · 关键角色", key:true,
+    status:["ok","warn","ok","block"],
+    tip:["","与「季度复盘」冲突","",""],
+    conflict:["","low","",""]},
+  {name:"李工", role:"专家", key:false,
+    status:["ok","ok","block","ok"],
+    tip:["","","已接受「客户评审」",""],
+    conflict:["","","high",""]},
+  {name:"王工", role:"专家", key:false,
+    status:["warn","ok","ok","ok"],
+    tip:["与晨会冲突","","",""],
+    conflict:["low","","",""]},
+  {name:"陈工", role:"专家", key:false,
+    status:["ok","block","ok","ok"],
+    tip:["","已接受「设计走查」","",""],
+    conflict:["","high","",""]},
+  {name:"周工", role:"专家", key:false,
+    status:["ok","ok","ok","block"],
+    tip:["","","","已接受「组内周会」"],
+    conflict:["","","","low"]},
+  {name:"吴工", role:"专家", key:false,
+    status:["block","ok","warn","ok"],
+    tip:["已接受「架构评审」","","与临时会议冲突",""],
+    conflict:["high","","low",""]},
+  {name:"刘总（经秘书确认）", role:"领导 · 经秘书询问", key:true,
+    status:["ok","block","ok","pending"],
+    tip:["","秘书回复：该时段不可行","","秘书尚未回复"],
+    conflict:["","high","",""]},
+  {name:"孙工", role:"专家", key:false,
+    status:["ok","ok","ok","pending"],
+    tip:["","","","本人尚未响应"],
+    conflict:["","","",""]},
+];
+
+let selected = 0;
+
+function delegateCounts(){ return document.getElementById("delegateToggle").checked; }
+
+function calcRate(i){
+  const okLike = p => p.status[i]==="ok" || (delegateCounts() && p.status[i]==="delegate");
+  const avail = people.filter(okLike).length;
+  return Math.round(avail/people.length*100);
+}
+function respondedCount(i){
+  return people.filter(p=>p.status[i]!=="pending").length;
+}
+function bestSlot(){
+  let best=0, bestScore=-1;
+  slots.forEach((_,i)=>{
+    const keyOk = people.filter(p=>p.key).every(p=>p.status[i]==="ok"||(delegateCounts()&&p.status[i]==="delegate"));
+    const score = calcRate(i) + (keyOk?1000:0);
+    if(score>bestScore){bestScore=score;best=i;}
+  });
+  return best;
+}
+
+function render(){
+  const best = bestSlot();
+  const header = document.getElementById("header");
+  header.innerHTML = `<div class="cell">参会人</div>` + slots.map((s,i)=>{
+    const rate = calcRate(i);
+    const responded = respondedCount(i);
+    const pct = Math.round(responded/people.length*100);
+    return `<div class="cell ${i===selected?'selected':''}" data-i="${i}">
+      ${i===best?'<span class="badge">推荐</span>':''}
+      ${s.label}<span class="rate">${rate}%</span>
+      <div class="progress-mini"><i style="width:${pct}%"></i></div>
+      <div style="font-size:10px;margin-top:3px;opacity:.8">已响应 ${responded}/${people.length}</div>
+    </div>`;
+  }).join("");
+  header.querySelectorAll(".cell[data-i]").forEach(el=>{
+    el.addEventListener("click",()=>{selected=+el.dataset.i;render();});
+  });
+
+  const rows = document.getElementById("rows");
+  rows.innerHTML = people.map(p=>{
+    const st = p.status[selected];
+    const icon = st==="ok"?"✅":st==="warn"?"⚠️":st==="block"?"❌":st==="delegate"?"👤":"…";
+    const tip = p.tip[selected];
+    const conflictTag = st==="warn" ? (p.conflict[selected]==="low"?"可协调":"较难协调") : "";
+    return `<div class="row"><div class="who ${p.key?'key':''}">${p.name}<span class="role">${p.role}</span></div>
+      <div class="cellstat ${st}">${icon}${conflictTag?`<span class="sub">${conflictTag}</span>`:""}${tip?`<div class="tip">${tip}</div>`:""}</div>
+      ${slots.slice(1).map((_,idx)=>{
+        const i=idx+1;
+        const st2=p.status[i]; const icon2= st2==="ok"?"✅":st2==="warn"?"⚠️":st2==="block"?"❌":st2==="delegate"?"👤":"…";
+        const tip2=p.tip[i]; const conflictTag2= st2==="warn" ? (p.conflict[i]==="low"?"可协调":"较难协调") : "";
+        return `<div class="cellstat ${st2}">${icon2}${conflictTag2?`<span class="sub">${conflictTag2}</span>`:""}${tip2?`<div class="tip">${tip2}</div>`:""}</div>`;
+      }).join("")}
+    </div>`;
+  }).join("");
+
+  renderVerdict();
+}
+
+function renderVerdict(){
+  const rate = calcRate(selected);
+  const keyOk = people.filter(p=>p.key).every(p=>p.status[selected]==="ok"||(delegateCounts()&&p.status[selected]==="delegate"));
+  const pending = people.some(p=>p.status[selected]==="pending");
+  const pass = rate>=70 && keyOk && !pending;
+  const v = document.getElementById("verdict");
+  v.className = "verdict " + (pass?"pass":"fail");
+  if(pass){
+    v.innerHTML = `<div><div class="label">✅ 判定有效 · 出席率 ${rate}%</div><div>关键角色均已确认，可自动创建日程并通知全员</div></div><button>确认该时段</button>`;
+  } else if(pending){
+    v.innerHTML = `<div><div class="label">⏳ 等待响应 · 当前出席率 ${rate}%</div><div>仍有成员未响应，超时将自动电话催办</div></div><button>立即催办</button>`;
+  } else {
+    const reason = rate<70 ? `出席率仅 ${rate}%，未达 70% 要求` : `出席率达标，但关键角色未确认`;
+    v.innerHTML = `<div><div class="label">✕ 判定无效 · ${reason}</div><div>系统将自动发起下一轮候选时段征询；连续两轮未达标将升级至协调者判断</div></div><button>发起下一轮</button>`;
+  }
+}
+
+document.getElementById("delegateToggle").addEventListener("change", render);
+render();
+</script>
+</body>
+</html>

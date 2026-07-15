@@ -1,0 +1,112 @@
+<svg viewBox="0 0 1440 1040" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap');
+    .display { font-family: 'Space Grotesk', sans-serif; }
+    .body { font-family: 'IBM Plex Sans', sans-serif; }
+    .mono { font-family: 'IBM Plex Mono', monospace; }
+  </style>
+  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#5B6570"/>
+  </marker>
+  <marker id="arrowBrick" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#A64B3B"/>
+  </marker>
+</defs>
+
+<rect width="1440" height="1040" fill="#EEF1F0"/>
+
+<text x="60" y="64" class="mono" font-size="13" fill="#8A9199" letter-spacing="2">SYSTEM ARCHITECTURE</text>
+<text x="60" y="104" class="display" font-size="34" font-weight="700" fill="#1E2A38">协调决策引擎 · 六层架构</text>
+<text x="60" y="130" class="body" font-size="13.5" fill="#5B6570">同一套引擎支撑多个业务模块，每个新场景只需接入②③层，其余复用</text>
+<line x1="60" y1="150" x2="1380" y2="150" stroke="#D5D9D6" stroke-width="1"/>
+
+<!-- Top: module sources -->
+<g>
+  <rect x="120" y="180" width="260" height="70" rx="4" fill="#FFFFFF" stroke="#1E2A38" stroke-width="1.5"/>
+  <text x="250" y="210" text-anchor="middle" class="mono" font-size="11" fill="#5B6570">场景一</text>
+  <text x="250" y="232" text-anchor="middle" class="display" font-size="15" font-weight="700" fill="#1E2A38">会议协调模块</text>
+</g>
+<g>
+  <rect x="420" y="180" width="260" height="70" rx="4" fill="#FFFFFF" stroke="#1E2A38" stroke-width="1.5"/>
+  <text x="550" y="210" text-anchor="middle" class="mono" font-size="11" fill="#5B6570">场景二</text>
+  <text x="550" y="232" text-anchor="middle" class="display" font-size="15" font-weight="700" fill="#1E2A38">时间申请仲裁模块</text>
+</g>
+<g>
+  <rect x="720" y="180" width="260" height="70" rx="4" fill="#FFFFFF" stroke="#8A9199" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="850" y="210" text-anchor="middle" class="mono" font-size="11" fill="#8A9199">未来场景</text>
+  <text x="850" y="232" text-anchor="middle" class="display" font-size="15" font-weight="700" fill="#8A9199">待接入模块…</text>
+</g>
+
+<path d="M 250 250 V 285" stroke="#5B6570" stroke-width="1.5" marker-end="url(#arrow)" fill="none"/>
+<path d="M 550 250 V 285" stroke="#5B6570" stroke-width="1.5" marker-end="url(#arrow)" fill="none"/>
+<path d="M 850 250 V 285" stroke="#8A9199" stroke-width="1.5" marker-end="url(#arrow)" fill="none" stroke-dasharray="4 3"/>
+
+<!-- Layer band helper -->
+<!-- Layer 1 -->
+<rect x="120" y="290" width="1200" height="70" rx="4" fill="#FFFFFF" stroke="#1E2A38" stroke-width="1.5"/>
+<rect x="120" y="290" width="6" height="70" fill="#2F6F62"/>
+<text x="150" y="318" class="mono" font-size="12" fill="#2F6F62">① 资源/日程读取层</text>
+<text x="150" y="340" class="body" font-size="12.5" fill="#5B6570">读取参与方日程、占用状态、历史数据 — 各模块共用</text>
+
+<path d="M 720 360 V 390" stroke="#5B6570" stroke-width="1.5" marker-end="url(#arrow)" fill="none"/>
+
+<!-- Layer 2 - module specific -->
+<g>
+  <rect x="120" y="392" width="380" height="80" rx="4" fill="#FFFFFF" stroke="#C98A3E" stroke-width="1.5"/>
+  <rect x="120" y="392" width="6" height="80" fill="#C98A3E"/>
+  <text x="150" y="418" class="mono" font-size="12" fill="#C98A3E">② 候选生成层 · 模块专属</text>
+  <text x="150" y="440" class="body" font-size="12" fill="#5B6570">会议：生成候选时段</text>
+  <text x="150" y="458" class="body" font-size="12" fill="#5B6570">时间申请：生成候选排序方案</text>
+</g>
+<g>
+  <rect x="940" y="392" width="380" height="80" rx="4" fill="#FFFFFF" stroke="#C98A3E" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="1130" y="424" text-anchor="middle" class="mono" font-size="11.5" fill="#C98A3E">新模块只需新写②③</text>
+  <text x="1130" y="446" text-anchor="middle" class="body" font-size="12" fill="#8A9199">其余四层直接复用</text>
+</g>
+
+<path d="M 310 472 V 500" stroke="#5B6570" stroke-width="1.5" marker-end="url(#arrow)" fill="none"/>
+
+<!-- Layer 3 -->
+<g>
+  <rect x="120" y="502" width="380" height="80" rx="4" fill="#FFFFFF" stroke="#C98A3E" stroke-width="1.5"/>
+  <rect x="120" y="502" width="6" height="80" fill="#C98A3E"/>
+  <text x="150" y="528" class="mono" font-size="12" fill="#C98A3E">③ 规则评分与判定层 · 模块专属</text>
+  <text x="150" y="550" class="body" font-size="12" fill="#5B6570">角色权重 / 有效性阈值 / 优先级评分</text>
+  <text x="150" y="568" class="body" font-size="12" fill="#5B6570">规则表可配置，按会议类型或团队预设</text>
+</g>
+
+<path d="M 720 470 V 620" stroke="#5B6570" stroke-width="1.5" marker-end="url(#arrow)" fill="none"/>
+<path d="M 310 582 H 720" stroke="#5B6570" stroke-width="1.5" marker-end="url(#arrow)" fill="none"/>
+
+<!-- Layer 4 -->
+<rect x="120" y="622" width="1200" height="70" rx="4" fill="#FFFFFF" stroke="#1E2A38" stroke-width="1.5"/>
+<rect x="120" y="622" width="6" height="70" fill="#2F6F62"/>
+<text x="150" y="650" class="mono" font-size="12" fill="#2F6F62">④ 沟通编排层</text>
+<text x="150" y="672" class="body" font-size="12.5" fill="#5B6570">分级触达（消息/电话/机器人卡片）+ 打扰成本感知，跨模块合并提醒 — 各模块共用</text>
+
+<path d="M 720 692 V 722" stroke="#5B6570" stroke-width="1.5" marker-end="url(#arrow)" fill="none"/>
+
+<!-- Layer 5 - escalation, highlighted -->
+<rect x="120" y="724" width="1200" height="90" rx="4" fill="#1E2A38"/>
+<text x="150" y="756" class="mono" font-size="12" fill="#F0A98C">⑤ 升级仲裁层 · 统一收件箱</text>
+<text x="150" y="784" class="body" font-size="13" fill="#C7CDD1">所有模块的"需要人判断"事项，按统一格式（Escalation Item）汇总，协调者在一个界面内处理全部升级请求</text>
+<text x="150" y="802" class="mono" font-size="11" fill="#9FD8C7">这是体系的枢纽层 — 新模块接入的唯一契约点</text>
+
+<path d="M 720 814 V 844" stroke="#5B6570" stroke-width="1.5" marker-end="url(#arrow)" fill="none"/>
+
+<!-- Layer 6 -->
+<rect x="120" y="846" width="1200" height="70" rx="4" fill="#FFFFFF" stroke="#1E2A38" stroke-width="1.5"/>
+<rect x="120" y="846" width="6" height="70" fill="#2F6F62"/>
+<text x="150" y="874" class="mono" font-size="12" fill="#2F6F62">⑥ 看板渲染层</text>
+<text x="150" y="896" class="body" font-size="12.5" fill="#5B6570">读取同一份状态数据，套用统一视觉模板渲染 — 各模块共用，新模块无需重新设计界面</text>
+
+<!-- feedback loop -->
+<path d="M 1320 780 H 1400 V 400 H 1320" stroke="#A64B3B" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#arrowBrick)"/>
+<text x="1330" y="770" class="mono" font-size="11" fill="#A64B3B" writing-mode="vertical-rl">处理结果回填 · 反哺规则库</text>
+
+<!-- legend / note -->
+<rect x="120" y="950" width="1200" height="60" rx="4" fill="#FFFFFF" stroke="#D9DDDB" stroke-width="1"/>
+<text x="150" y="976" class="mono" font-size="11.5" fill="#5B6570">深色高亮层 = 体系枢纽（升级仲裁层）</text>
+<text x="150" y="996" class="body" font-size="12" fill="#5B6570">虚线 = 每接入一个新工作流仅需新增的部分；实线层为全体系共用的通用能力</text>
+</svg>

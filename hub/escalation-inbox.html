@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>统一升级仲裁收件箱 · 原型</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --ink:#1E2A38; --paper:#EEF1F0; --panel:#FFFFFF; --line:#D9DDDB; --slate:#5B6570;
+  --teal:#2F6F62; --teal-bg:#E4F0EC;
+  --amber:#C98A3E; --amber-bg:#FBF0E1;
+  --brick:#A64B3B; --brick-bg:#F7E8E5;
+  --violet:#5B5A9C; --violet-bg:#ECEBF5;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);font-family:'IBM Plex Sans',sans-serif;color:var(--ink);padding:40px 24px;}
+.wrap{max-width:1120px;margin:0 auto;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--slate);text-transform:uppercase;}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;margin:6px 0 4px;}
+.sub{color:var(--slate);font-size:14px;margin-bottom:22px;}
+
+.filters{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+.f{
+  font-family:'IBM Plex Mono',monospace;font-size:12px;
+  background:var(--panel);border:1px solid var(--line);border-radius:16px;
+  padding:7px 14px;cursor:pointer;color:var(--slate);
+}
+.f.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+.layout{display:grid;grid-template-columns:1fr 380px;gap:22px;align-items:start;}
+
+.list{display:flex;flex-direction:column;gap:12px;}
+.card{
+  background:var(--panel);border:1px solid var(--line);border-radius:4px;
+  padding:16px 18px;cursor:pointer;transition:border-color .15s;
+}
+.card:hover{border-color:var(--ink);}
+.card.selected{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink);}
+.card.resolved{opacity:.45;}
+.card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.tags{display:flex;gap:6px;}
+.tag{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:2px 8px;border-radius:8px;}
+.tag.mod-meeting{background:var(--teal-bg);color:var(--teal);}
+.tag.mod-queue{background:var(--violet-bg);color:var(--violet);}
+.tag.urg-high{background:var(--brick-bg);color:var(--brick);}
+.tag.urg-mid{background:var(--amber-bg);color:var(--amber);}
+.tag.urg-low{background:#EDEEEF;color:var(--slate);}
+.card-time{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--slate);}
+.card-summary{font-size:14px;line-height:1.5;}
+.card-meta{margin-top:8px;font-size:11.5px;color:var(--slate);font-family:'IBM Plex Mono',monospace;}
+
+.detail{
+  background:var(--panel);border:1px solid var(--line);border-radius:4px;
+  padding:20px;position:sticky;top:20px;
+}
+.detail .eyebrow2{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--slate);}
+.detail h2{font-family:'Space Grotesk',sans-serif;font-size:18px;margin:6px 0 14px;}
+.detail .field{margin-bottom:14px;}
+.detail .field b{display:block;font-size:11.5px;font-family:'IBM Plex Mono',monospace;color:var(--slate);margin-bottom:4px;}
+.detail .field div{font-size:13.5px;line-height:1.5;}
+.candidate{
+  border:1px solid var(--line);border-radius:4px;padding:10px 12px;margin-bottom:8px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.candidate .name{font-size:13px;}
+.candidate .note{font-size:11.5px;color:var(--slate);margin-top:2px;}
+.candidate button{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;
+  background:var(--teal);color:#fff;border:none;border-radius:3px;padding:6px 12px;cursor:pointer;
+}
+.empty{color:var(--slate);font-size:13px;text-align:center;padding:40px 0;}
+.schema-note{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line);font-size:11.5px;color:var(--slate);}
+.schema-note code{font-family:'IBM Plex Mono',monospace;background:#F5F6F5;padding:1px 4px;border-radius:2px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">SYSTEM PROTOTYPE — 升级仲裁层</div>
+  <h1>统一升级仲裁收件箱</h1>
+  <div class="sub">来自不同模块的「需要人判断」事项，按统一格式汇总在同一个工作台处理</div>
+
+  <div class="filters" id="filters"></div>
+
+  <div class="layout">
+    <div class="list" id="list"></div>
+    <div class="detail" id="detail"></div>
+  </div>
+</div>
+
+<script>
+const items = [
+  {
+    id:"esc-0031", source_module:"meeting", source_label:"会议协调",
+    urgency:"high", created_at:"09:12",
+    summary:"「XX 项目技术评审会」连续两轮征询仍未满足 70% 出席率，且主席张评委在多个候选时段均有冲突",
+    requested_decision:"选择是否将会议移至非工作时间，或调整主席出席方式",
+    deadline:"今日 12:00 前",
+    candidates:[
+      {name:"周四 20:30–21:30", note:"当前候选中出席率最高（88%），但为非工作时间"},
+      {name:"张评委委托代理出席", note:"由副主席代为出席，出席率规则允许但需张评委确认"},
+      {name:"顺延至下周同类评审合并召开", note:"需协调议题优先级，可能影响项目进度"}
+    ],
+    resolved:false
+  },
+  {
+    id:"esc-0032", source_module:"queue", source_label:"时间申请仲裁",
+    urgency:"high", created_at:"09:40",
+    summary:"陈工（合同审批，客户今晚需回复）与吴工（供应商合同今日需拍板）优先级得分相近（92 / 91），今日日程仅剩 1 个空档",
+    requested_decision:"确定二者何者优先安排，或是否可合并为一次简短沟通",
+    deadline:"今日 11:00 前",
+    candidates:[
+      {name:"优先安排陈工", note:"客户方为外部关系，逾期风险更高"},
+      {name:"优先安排吴工", note:"供应商合同涉及金额更大，等待时间更短"},
+      {name:"合并为一次 15 分钟联合沟通", note:"需确认两个事项是否可同时说明，风险：时间可能不够"}
+    ],
+    resolved:false
+  },
+  {
+    id:"esc-0028", source_module:"meeting", source_label:"会议协调",
+    urgency:"mid", created_at:"昨日 17:20",
+    summary:"「季度架构评审」候选时段出席率达标，但组织者本人临时出差，是否算作有效出席存在争议",
+    requested_decision:"判定组织者远程连线是否可计入「在场」",
+    deadline:"已处理",
+    candidates:[
+      {name:"允许远程连线计入在场", note:"已按此处理，并沉淀为规则：组织者远程视频参会计入出席"},
+    ],
+    resolved:true
+  },
+  {
+    id:"esc-0025", source_module:"queue", source_label:"时间申请仲裁",
+    urgency:"low", created_at:"前日",
+    summary:"周工申请的周报确认事项长期排队无明确截止时间，已连续 3 次被更紧急事项顶到队尾",
+    requested_decision:"是否将此类无明确截止时间的事项统一改为异步简报审阅",
+    deadline:"已处理",
+    candidates:[
+      {name:"统一改为简报审阅，不再占用面对面时间", note:"已采纳，并沉淀为规则：无截止时间的常规汇报默认走异步渠道"}
+    ],
+    resolved:true
+  }
+];
+
+let filterModule = "all";
+let filterUrgency = "all";
+let selectedId = items.find(i=>!i.resolved).id;
+
+const filters = [
+  {key:"module", val:"all", label:"全部来源"},
+  {key:"module", val:"meeting", label:"会议协调"},
+  {key:"module", val:"queue", label:"时间申请仲裁"},
+  {key:"urgency", val:"all2", label:"全部紧急度"},
+  {key:"urgency", val:"high", label:"高"},
+  {key:"urgency", val:"mid", label:"中"},
+  {key:"urgency", val:"low", label:"低"},
+];
+
+function renderFilters(){
+  const el = document.getElementById("filters");
+  el.innerHTML = filters.map(f=>{
+    const active = (f.key==="module" && filterModule===f.val) || (f.key==="urgency" && (filterUrgency===f.val || (f.val==="all2"&&filterUrgency==="all")));
+    return `<div class="f ${active?'active':''}" data-key="${f.key}" data-val="${f.val}">${f.label}</div>`;
+  }).join("");
+  el.querySelectorAll(".f").forEach(e=>{
+    e.addEventListener("click",()=>{
+      if(e.dataset.key==="module") filterModule = e.dataset.val;
+      else filterUrgency = e.dataset.val==="all2" ? "all" : e.dataset.val;
+      render();
+    });
+  });
+}
+
+function filtered(){
+  return items.filter(i=>
+    (filterModule==="all"||i.source_module===filterModule) &&
+    (filterUrgency==="all"||i.urgency===filterUrgency)
+  );
+}
+
+function renderList(){
+  const list = document.getElementById("list");
+  const data = filtered();
+  if(data.length===0){ list.innerHTML = `<div class="empty">没有匹配的升级事项</div>`; return; }
+  list.innerHTML = data.map(i=>`
+    <div class="card ${i.id===selectedId?'selected':''} ${i.resolved?'resolved':''}" data-id="${i.id}">
+      <div class="card-top">
+        <div class="tags">
+          <span class="tag mod-${i.source_module}">${i.source_label}</span>
+          <span class="tag urg-${i.urgency}">${i.urgency==='high'?'高':i.urgency==='mid'?'中':'低'}紧急</span>
+        </div>
+        <div class="card-time">${i.created_at}</div>
+      </div>
+      <div class="card-summary">${i.summary}</div>
+      <div class="card-meta">${i.resolved?'已处理':'截止：'+i.deadline} · ${i.id}</div>
+    </div>
+  `).join("");
+  list.querySelectorAll(".card").forEach(c=>{
+    c.addEventListener("click",()=>{selectedId=c.dataset.id;render();});
+  });
+}
+
+function renderDetail(){
+  const i = items.find(x=>x.id===selectedId);
+  const el = document.getElementById("detail");
+  if(!i){ el.innerHTML = `<div class="empty">选择左侧事项查看详情</div>`; return; }
+  el.innerHTML = `
+    <div class="eyebrow2">${i.id} · ${i.source_label}</div>
+    <h2>${i.resolved?'✅ 已处理事项':'待决策事项'}</h2>
+    <div class="field"><b>SUMMARY</b><div>${i.summary}</div></div>
+    <div class="field"><b>REQUESTED DECISION</b><div>${i.requested_decision}</div></div>
+    <div class="field"><b>DEADLINE</b><div>${i.deadline}</div></div>
+    <div class="field"><b>CANDIDATES</b>
+      ${i.candidates.map(c=>`
+        <div class="candidate">
+          <div><div class="name">${c.name}</div><div class="note">${c.note}</div></div>
+          ${i.resolved?'':'<button>选择</button>'}
+        </div>
+      `).join("")}
+    </div>
+    <div class="schema-note">
+      统一结构：<code>source_module</code> · <code>urgency</code> · <code>summary</code> · <code>candidates[]</code> · <code>deadline</code> · <code>resolution</code> —— 任意新模块按此格式抛出即可自动汇入本收件箱
+    </div>
+  `;
+}
+
+function render(){ renderFilters(); renderList(); renderDetail(); }
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<svg viewBox="0 0 1440 980" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap');
+    .display { font-family: 'Space Grotesk', sans-serif; }
+    .body { font-family: 'IBM Plex Sans', sans-serif; }
+    .mono { font-family: 'IBM Plex Mono', monospace; }
+  </style>
+  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#5B6570"/>
+  </marker>
+  <marker id="arrowAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#C98A3E"/>
+  </marker>
+  <marker id="arrowBrick" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#A64B3B"/>
+  </marker>
+</defs>
+
+<rect width="1440" height="980" fill="#EEF1F0"/>
+
+<!-- header -->
+<text x="60" y="66" class="mono" font-size="13" fill="#8A9199" letter-spacing="2">CASE STUDY — DECISION FLOW</text>
+<text x="60" y="106" class="display" font-size="34" font-weight="700" fill="#1E2A38">AI 辅助多方会议协调 · 决策流程</text>
+<line x1="60" y1="126" x2="1380" y2="126" stroke="#D5D9D6" stroke-width="1"/>
+
+<!-- lane labels -->
+<text x="60" y="168" class="mono" font-size="12" fill="#8A9199" letter-spacing="1.5">AGENT 自主执行</text>
+<line x1="60" y1="178" x2="1380" y2="178" stroke="#D5D9D6" stroke-width="1" stroke-dasharray="2 4"/>
+
+<!-- Module 1 -->
+<g>
+  <rect x="60" y="210" width="300" height="150" rx="4" fill="#FFFFFF" stroke="#1E2A38" stroke-width="1.5"/>
+  <rect x="60" y="210" width="6" height="150" fill="#2F6F62"/>
+  <text x="90" y="242" class="mono" font-size="12" fill="#2F6F62">MODULE 01</text>
+  <text x="90" y="270" class="display" font-size="19" font-weight="700" fill="#1E2A38">分级沟通引擎</text>
+  <text x="90" y="296" class="body" font-size="13" fill="#5B6570">按角色分层发起询问</text>
+  <text x="90" y="316" class="body" font-size="13" fill="#5B6570">专家 · 关键专家 · 领导秘书</text>
+  <text x="90" y="336" class="body" font-size="13" fill="#5B6570">超时自动电话催办</text>
+</g>
+
+<path d="M 360 285 H 420" stroke="#5B6570" stroke-width="1.5" marker-end="url(#arrow)" fill="none"/>
+
+<!-- Module 2 -->
+<g>
+  <rect x="420" y="210" width="300" height="150" rx="4" fill="#FFFFFF" stroke="#1E2A38" stroke-width="1.5"/>
+  <rect x="420" y="210" width="6" height="150" fill="#2F6F62"/>
+  <text x="450" y="242" class="mono" font-size="12" fill="#2F6F62">MODULE 02</text>
+  <text x="450" y="270" class="display" font-size="19" font-weight="700" fill="#1E2A38">多时段并行匹配</text>
+  <text x="450" y="296" class="body" font-size="13" fill="#5B6570">一次推送多个候选时段</text>
+  <text x="450" y="316" class="body" font-size="13" fill="#5B6570">✅ 空闲 ⚠️ 待判断 ❌ 冲突</text>
+  <text x="450" y="336" class="body" font-size="13" fill="#5B6570">实时汇总协调看板</text>
+</g>
+
+<path d="M 720 285 H 780" stroke="#5B6570" stroke-width="1.5" marker-end="url(#arrow)" fill="none"/>
+
+<!-- Module 3 : decision diamond -->
+<g>
+  <polygon points="930,205 1080,285 930,365 780,285" fill="#FFFFFF" stroke="#1E2A38" stroke-width="1.5"/>
+  <text x="930" y="270" text-anchor="middle" class="mono" font-size="12" fill="#C98A3E">MODULE 03</text>
+  <text x="930" y="292" text-anchor="middle" class="display" font-size="16" font-weight="700" fill="#1E2A38">有效性判定</text>
+  <text x="930" y="312" text-anchor="middle" class="body" font-size="11.5" fill="#5B6570">出席率≥70% 且</text>
+  <text x="930" y="328" text-anchor="middle" class="body" font-size="11.5" fill="#5B6570">关键角色在场/已代理？</text>
+</g>
+
+<!-- loop back: not satisfied -->
+<path d="M 930 205 V 150 H 570 V 210" stroke="#C98A3E" stroke-width="1.5" fill="none" marker-end="url(#arrowAmber)"/>
+<rect x="700" y="128" width="140" height="26" fill="#EEF1F0"/>
+<text x="770" y="146" text-anchor="middle" class="mono" font-size="11.5" fill="#C98A3E">否 · 发起下一轮征询</text>
+
+<!-- yes -> right to confirm -->
+<path d="M 1080 285 H 1140" stroke="#5B6570" stroke-width="1.5" marker-end="url(#arrow)" fill="none"/>
+<text x="1096" y="272" class="mono" font-size="11" fill="#2F6F62">是</text>
+
+<!-- confirm node -->
+<g>
+  <rect x="1140" y="230" width="240" height="110" rx="4" fill="#1E2A38"/>
+  <text x="1260" y="264" text-anchor="middle" class="mono" font-size="12" fill="#9FD8C7">CONFIRMED</text>
+  <text x="1260" y="290" text-anchor="middle" class="display" font-size="17" font-weight="700" fill="#FFFFFF">会议确认</text>
+  <text x="1260" y="312" text-anchor="middle" class="body" font-size="12" fill="#C7CDD1">自动创建日程 · 通知全员</text>
+</g>
+
+<!-- escalation branch downward from module 3 -->
+<path d="M 930 365 V 430" stroke="#A64B3B" stroke-width="1.5" fill="none" marker-end="url(#arrowBrick)"/>
+<text x="948" y="405" class="mono" font-size="11.5" fill="#A64B3B">多轮仍无法满足</text>
+
+<!-- lane divider for human -->
+<line x1="60" y1="450" x2="1380" y2="450" stroke="#D5D9D6" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="60" y="480" class="mono" font-size="12" fill="#8A9199" letter-spacing="1.5">升级至人工判断</text>
+
+<!-- escalation box -->
+<g>
+  <rect x="780" y="500" width="300" height="150" rx="4" fill="#FFFFFF" stroke="#A64B3B" stroke-width="1.5"/>
+  <rect x="780" y="500" width="6" height="150" fill="#A64B3B"/>
+  <text x="810" y="532" class="mono" font-size="12" fill="#A64B3B">MODULE 04</text>
+  <text x="810" y="560" class="display" font-size="19" font-weight="700" fill="#1E2A38">升级机制</text>
+  <text x="810" y="586" class="body" font-size="13" fill="#5B6570">整理冲突摘要 + 候选方案</text>
+  <text x="810" y="606" class="body" font-size="13" fill="#5B6570">协调者判断是否用非工作时间</text>
+  <text x="810" y="626" class="body" font-size="13" fill="#5B6570">领导最终拍板</text>
+</g>
+
+<path d="M 780 575 H 500" stroke="#A64B3B" stroke-width="1.5" fill="none" marker-end="url(#arrowBrick)"/>
+<text x="530" y="560" class="mono" font-size="11" fill="#A64B3B">拍板结果</text>
+
+<!-- back to confirm from escalation -->
+<path d="M 500 575 V 285 H 780" stroke="#A64B3B" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#arrowBrick)"/>
+
+<!-- post meeting lane -->
+<line x1="60" y1="700" x2="1380" y2="700" stroke="#D5D9D6" stroke-width="1" stroke-dasharray="2 4"/>
+<text x="60" y="730" class="mono" font-size="12" fill="#8A9199" letter-spacing="1.5">会中 / 会后 · AGENT 自主执行</text>
+
+<path d="M 1260 340 V 760" stroke="#5B6570" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+<g>
+  <rect x="120" y="760" width="260" height="130" rx="4" fill="#FFFFFF" stroke="#1E2A38" stroke-width="1.5"/>
+  <rect x="120" y="760" width="6" height="130" fill="#2F6F62"/>
+  <text x="150" y="792" class="mono" font-size="12" fill="#2F6F62">会中</text>
+  <text x="150" y="818" class="display" font-size="17" font-weight="700" fill="#1E2A38">全程参与</text>
+  <text x="150" y="840" class="body" font-size="13" fill="#5B6570">自动生成纪要</text>
+  <text x="150" y="860" class="body" font-size="13" fill="#5B6570">自动分配待办</text>
+</g>
+
+<g>
+  <rect x="440" y="760" width="260" height="130" rx="4" fill="#FFFFFF" stroke="#1E2A38" stroke-width="1.5"/>
+  <rect x="440" y="760" width="6" height="130" fill="#2F6F62"/>
+  <text x="470" y="792" class="mono" font-size="12" fill="#2F6F62">会后</text>
+  <text x="470" y="818" class="display" font-size="17" font-weight="700" fill="#1E2A38">闭环跟踪</text>
+  <text x="470" y="840" class="body" font-size="13" fill="#5B6570">定期检查遗留问题</text>
+  <text x="470" y="860" class="body" font-size="13" fill="#5B6570">自动发送进展邮件</text>
+</g>
+
+<path d="M 380 825 H 440" stroke="#5B6570" stroke-width="1.5" marker-end="url(#arrow)" fill="none"/>
+
+<g>
+  <rect x="760" y="760" width="300" height="130" rx="4" fill="#FFFFFF" stroke="#1E2A38" stroke-width="1.5"/>
+  <rect x="760" y="760" width="6" height="130" fill="#2F6F62"/>
+  <text x="790" y="792" class="mono" font-size="12" fill="#2F6F62">持续</text>
+  <text x="790" y="818" class="display" font-size="17" font-weight="700" fill="#1E2A38">规则沉淀复用</text>
+  <text x="790" y="840" class="body" font-size="13" fill="#5B6570">同类会议无需重复配置</text>
+  <text x="790" y="860" class="body" font-size="13" fill="#5B6570">升级案例反哺规则库</text>
+</g>
+
+<path d="M 700 825 H 760" stroke="#5B6570" stroke-width="1.5" marker-end="url(#arrow)" fill="none"/>
+
+<!-- legend -->
+<g class="body" font-size="12" fill="#5B6570">
+  <rect x="1140" y="770" width="14" height="14" fill="#2F6F62"/>
+  <text x="1162" y="782">Agent 自主处理</text>
+  <rect x="1140" y="800" width="14" height="14" fill="#A64B3B"/>
+  <text x="1162" y="812">升级人工判断</text>
+</g>
+
+</svg>
