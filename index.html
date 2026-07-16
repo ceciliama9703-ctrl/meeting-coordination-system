@@ -12,6 +12,10 @@
   --amber:#C98A3E; --amber-bg:#FBF0E1;
   --brick:#A64B3B; --brick-bg:#F7E8E5;
   --violet:#5B5A9C; --violet-bg:#ECEBF5;
+  --blue:#3D6EA5; --blue-bg:#E5EDF5;
+  --sky:#2E7DA6; --sky-bg:#E4EFF5;
+  --olive:#748233; --olive-bg:#EEF0E1;
+  --rose:#B0576D; --rose-bg:#F5E9EC;
 }
 *{box-sizing:border-box;}
 body{margin:0;background:var(--paper);font-family:'IBM Plex Sans',sans-serif;color:var(--ink);padding:48px 24px;}
@@ -25,6 +29,46 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:32px;margin:
 
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
 
+.card-wrap{
+  background:var(--panel);border:1px solid var(--line);border-radius:4px;
+  padding:20px;position:relative;overflow:hidden;cursor:grab;
+  transition:border-color .15s, transform .15s, box-shadow .15s;
+}
+.card-wrap:active{cursor:grabbing;}
+.card-wrap.dragging{opacity:.35;}
+.card-wrap.drop-hint{box-shadow:0 0 0 2px var(--ink) inset;}
+.card-wrap::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;}
+.card-wrap.meeting::before{background:var(--teal);}
+.card-wrap.queue::before{background:var(--violet);}
+.card-wrap.budget::before{background:var(--amber);}
+.card-wrap.mentor::before{background:var(--blue, #3D6EA5);}
+.card-wrap.info::before{background:var(--sky, #2E7DA6);}
+.card-wrap.schedule::before{background:var(--olive, #748233);}
+.card-wrap.birthday::before{background:var(--rose, #B0576D);}
+
+.grip{position:absolute;top:14px;right:14px;font-size:13px;color:var(--line);letter-spacing:1px;user-select:none;}
+.card-wrap:hover .grip{color:var(--slate);}
+
+.card-wrap .tag{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;padding:2px 8px;border-radius:8px;
+  display:inline-block;margin-bottom:10px;
+}
+.card-wrap.meeting .tag{background:var(--teal-bg);color:var(--teal);}
+.card-wrap.queue .tag{background:var(--violet-bg);color:var(--violet);}
+.card-wrap.budget .tag{background:var(--amber-bg);color:var(--amber);}
+.card-wrap.mentor .tag{background:var(--blue-bg);color:var(--blue);}
+.card-wrap.info .tag{background:var(--sky-bg);color:var(--sky);}
+.card-wrap.schedule .tag{background:var(--olive-bg);color:var(--olive);}
+.card-wrap.birthday .tag{background:var(--rose-bg);color:var(--rose);}
+
+.card-wrap h3{font-family:'Space Grotesk',sans-serif;font-size:16.5px;margin:0 0 8px;}
+.card-wrap p{font-size:12.5px;color:var(--slate);line-height:1.55;margin:0 0 14px;}
+.card-wrap a.go{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink);
+  display:flex;align-items:center;gap:4px;text-decoration:none;width:fit-content;
+}
+.card-wrap a.go:hover{color:var(--teal);}
+
 .card{
   background:var(--panel);border:1px solid var(--line);border-radius:4px;
   padding:20px;text-decoration:none;color:var(--ink);display:block;
@@ -32,8 +76,6 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:32px;margin:
 }
 .card:hover{border-color:var(--ink);transform:translateY(-2px);}
 .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;}
-.card.meeting::before{background:var(--teal);}
-.card.queue::before{background:var(--violet);}
 .card.hub::before{background:var(--brick);}
 .card.diagram::before{background:var(--amber);}
 .card.doc::before{background:var(--slate);}
@@ -42,9 +84,6 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:32px;margin:
   font-family:'IBM Plex Mono',monospace;font-size:10px;padding:2px 8px;border-radius:8px;
   display:inline-block;margin-bottom:10px;
 }
-.card.meeting .tag{background:var(--teal-bg);color:var(--teal);}
-.card.queue .tag{background:var(--violet-bg);color:var(--violet);}
-.card.hub .tag{background:var(--brick-bg);color:var(--brick);}
 .card.diagram .tag{background:var(--amber-bg);color:var(--amber);}
 .card.doc .tag{background:#EDEEEF;color:var(--slate);}
 
@@ -66,26 +105,63 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:32px;margin:
   <div class="sub">从两个真实业务场景出发，抽象出一套可复用的协调决策引擎。以下是当前已接入的模块与体系支持材料，点击卡片进入对应界面。</div>
 
   <div class="status">
-    <div class="s"><span class="dot" style="background:var(--teal)"></span>已接入模块 <b>2</b></div>
-    <div class="s"><span class="dot" style="background:var(--brick)"></span>待处理升级事项 <b>2</b></div>
+    <div class="s"><span class="dot" style="background:var(--teal)"></span>已接入模块 <b>7</b></div>
+    <div class="s"><span class="dot" style="background:var(--brick)"></span>待处理升级事项 <b>9</b></div>
     <div class="s"><span class="dot" style="background:var(--slate)"></span>规则库沉淀条目 <b>2</b></div>
   </div>
 
-  <div class="section-label">业务模块</div>
-  <div class="grid">
-    <a class="card meeting" href="modules/meeting-board.html">
-      <span class="tag">场景一 · 已接入</span>
+  <div class="section-label">业务模块 <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--slate);font-weight:400;letter-spacing:0;">（拖动卡片可重新排序，编号自动更新）</span></div>
+  <div class="grid" id="module-grid">
+    <div class="card-wrap meeting" draggable="true" data-key="meeting">
+      <span class="grip">⠿⠿</span>
+      <span class="tag">业务场景一 · 已接入</span>
       <h3>会议协调看板</h3>
       <p>多方日程冲突下的候选时段匹配、有效性判定与升级触发</p>
-      <span class="go">进入模块 →</span>
-    </a>
-    <a class="card queue" href="modules/leader-queue.html">
-      <span class="tag">场景二 · 已接入</span>
+      <a class="go" href="modules/meeting-board.html" draggable="false">进入模块 →</a>
+    </div>
+    <div class="card-wrap queue" draggable="true" data-key="queue">
+      <span class="grip">⠿⠿</span>
+      <span class="tag">业务场景二 · 已接入</span>
       <h3>领导时间申请队列</h3>
       <p>多个申请争抢稀缺时间资源时的优先级排序与仲裁</p>
-      <span class="go">进入模块 →</span>
-    </a>
-    <a class="card queue" style="opacity:.5;pointer-events:none;" href="#">
+      <a class="go" href="modules/leader-queue.html" draggable="false">进入模块 →</a>
+    </div>
+    <div class="card-wrap budget" draggable="true" data-key="budget">
+      <span class="grip">⠿⠿</span>
+      <span class="tag">业务场景三 · 已接入</span>
+      <h3>经费管理台账</h3>
+      <p>固定总额台账记录、总预算预警与审批驳回留痕</p>
+      <a class="go" href="modules/budget-ledger.html" draggable="false">进入模块 →</a>
+    </div>
+    <div class="card-wrap mentor" draggable="true" data-key="mentor">
+      <span class="grip">⠿⠿</span>
+      <span class="tag">业务场景四 · 已接入</span>
+      <h3>新员工与导师管理</h3>
+      <p>入职进展跟踪、转正评级判定与优秀率统计</p>
+      <a class="go" href="modules/mentor-onboarding.html" draggable="false">进入模块 →</a>
+    </div>
+    <div class="card-wrap info" draggable="true" data-key="info">
+      <span class="grip">⠿⠿</span>
+      <span class="tag">业务场景五 · 已接入</span>
+      <h3>信息收集与反馈看板</h3>
+      <p>多任务并行催办、反馈进度追踪与升级触发</p>
+      <a class="go" href="modules/info-collection.html" draggable="false">进入模块 →</a>
+    </div>
+    <div class="card-wrap schedule" draggable="true" data-key="schedule">
+      <span class="grip">⠿⠿</span>
+      <span class="tag">业务场景六 · 已接入</span>
+      <h3>经理日程管理</h3>
+      <p>日程可视化 + 仅抄送会议自动隐藏，边界情况标记待确认</p>
+      <a class="go" href="modules/schedule-management.html" draggable="false">进入模块 →</a>
+    </div>
+    <div class="card-wrap birthday" draggable="true" data-key="birthday">
+      <span class="grip">⠿⠿</span>
+      <span class="tag">业务场景七 · 已接入</span>
+      <h3>员工生日关怀</h3>
+      <p>轻量自动化模块，定时触发祝福与在职状态边界确认</p>
+      <a class="go" href="modules/birthday-care.html" draggable="false">进入模块 →</a>
+    </div>
+    <a class="card" style="opacity:.5;pointer-events:none;" href="#">
       <span class="tag" style="background:#EDEEEF;color:var(--slate)">待接入</span>
       <h3>新模块…</h3>
       <p>按同一套引擎接入下一个协调决策场景</p>
@@ -125,5 +201,59 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:32px;margin:
     </a>
   </div>
 </div>
+<script>
+(function(){
+  const grid = document.getElementById('module-grid');
+  const chineseNums = ['一','二','三','四','五','六','七','八','九','十'];
+
+  function getChinese(n){ return chineseNums[n-1] || String(n); }
+
+  function renumber(){
+    const cards = grid.querySelectorAll('.card-wrap');
+    cards.forEach((card, i) => {
+      const badge = card.querySelector('.tag');
+      badge.textContent = `业务场景${getChinese(i+1)} · 已接入`;
+    });
+  }
+
+  function getDragAfterElement(container, y){
+    const els = [...container.querySelectorAll('.card-wrap:not(.dragging)')];
+    return els.reduce((closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if (offset < 0 && offset > closest.offset){
+        return { offset, element: child };
+      }
+      return closest;
+    }, { offset: Number.NEGATIVE_INFINITY, element: null }).element;
+  }
+
+  grid.querySelectorAll('.card-wrap').forEach(card => {
+    card.addEventListener('dragstart', () => {
+      card.classList.add('dragging');
+    });
+    card.addEventListener('dragend', () => {
+      card.classList.remove('dragging');
+      renumber();
+    });
+  });
+
+  const placeholder = grid.querySelector('a.card');
+
+  grid.addEventListener('dragover', e => {
+    e.preventDefault();
+    const dragging = grid.querySelector('.dragging');
+    if (!dragging) return;
+    const afterElement = getDragAfterElement(grid, e.clientY);
+    if (afterElement == null){
+      grid.insertBefore(dragging, placeholder);
+    } else {
+      grid.insertBefore(dragging, afterElement);
+    }
+  });
+
+  renumber();
+})();
+</script>
 </body>
 </html>

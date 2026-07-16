@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>新员工与导师管理看板 · 原型</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --ink:#1E2A38; --paper:#EEF1F0; --panel:#FFFFFF; --line:#D9DDDB; --slate:#5B6570;
+  --teal:#2F6F62; --teal-bg:#E4F0EC;
+  --amber:#C98A3E; --amber-bg:#FBF0E1;
+  --brick:#A64B3B; --brick-bg:#F7E8E5;
+  --violet:#5B5A9C; --violet-bg:#ECEBF5;
+  --blue:#3D6EA5; --blue-bg:#E5EDF5;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);font-family:'IBM Plex Sans',sans-serif;color:var(--ink);padding:40px 24px;}
+.wrap{max-width:1180px;margin:0 auto;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--slate);text-transform:uppercase;}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;margin:6px 0 4px;}
+.sub{color:var(--slate);font-size:14px;margin-bottom:22px;}
+
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:16px 18px;}
+.stat .num{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;}
+.stat .lbl{font-size:11.5px;color:var(--slate);font-family:'IBM Plex Mono',monospace;margin-top:2px;}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:20px;margin-bottom:18px;}
+.panel h2{font-family:'Space Grotesk',sans-serif;font-size:15px;margin:0 0 4px;}
+.panel .desc{font-size:12px;color:var(--slate);margin-bottom:14px;}
+
+table{width:100%;border-collapse:collapse;font-size:12.5px;}
+th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--slate);font-weight:500;padding:8px 10px;border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.5px;}
+td{padding:10px;border-bottom:1px solid #EDEEEF;vertical-align:top;}
+tr.flagged td{background:var(--blue-bg);}
+
+.badge{font-family:'IBM Plex Mono',monospace;font-size:10.5px;padding:2px 8px;border-radius:8px;display:inline-block;}
+.badge.stage{background:var(--amber-bg);color:var(--amber);}
+.badge.done{background:var(--teal-bg);color:var(--teal);}
+.badge.group-yes{background:var(--teal-bg);color:var(--teal);}
+.badge.group-no{background:var(--brick-bg);color:var(--brick);}
+.badge.excellent{background:var(--blue-bg);color:var(--blue);}
+.badge.good{background:#EDEEEF;color:var(--slate);}
+.badge.review{background:var(--blue);color:#fff;}
+.badge.pending{background:var(--amber-bg);color:var(--amber);}
+
+.perf-dots{display:flex;gap:3px;}
+.dot{width:8px;height:8px;border-radius:50%;}
+.dot.ex{background:var(--blue);}
+.dot.good{background:var(--slate);opacity:.4;}
+
+.note-line{font-size:11px;color:var(--slate);margin-top:3px;}
+.note-line.flag{color:var(--blue);font-weight:500;}
+
+.rule-note{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);font-size:11.5px;color:var(--slate);line-height:1.6;}
+.rule-note code{font-family:'IBM Plex Mono',monospace;background:#F5F6F5;padding:1px 4px;border-radius:2px;}
+
+.escalation-strip h2{font-family:'Space Grotesk',sans-serif;font-size:15px;margin:0 0 12px;}
+.esc-card{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:4px;padding:14px 16px;margin-bottom:10px;}
+.esc-top{display:flex;justify-content:space-between;margin-bottom:6px;}
+.esc-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;background:var(--blue-bg);color:var(--blue);padding:2px 8px;border-radius:8px;}
+.esc-time{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--slate);}
+.esc-summary{font-size:13px;line-height:1.5;margin-bottom:4px;}
+.esc-decision{font-size:12px;color:var(--slate);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">MODULE — 场景五：新员工与导师管理</div>
+  <h1>新员工与导师管理看板</h1>
+  <div class="sub">导师分配由业务组前置决议，本模块负责记录进展、拉群跟踪与转正评级判定</div>
+
+  <div class="stat-row">
+    <div class="stat"><div class="num">18</div><div class="lbl">当年新员工总数</div></div>
+    <div class="stat"><div class="num">14</div><div class="lbl">已完成转正</div></div>
+    <div class="stat"><div class="num">5</div><div class="lbl">评定为优秀</div></div>
+    <div class="stat"><div class="num" style="color:var(--blue)">35.7%</div><div class="lbl">当年转正优秀率</div></div>
+  </div>
+
+  <div class="panel">
+    <h2>新员工名单与进展</h2>
+    <div class="desc">导师人选、拉群状态为业务组决议结果录入；转正结果按规则自动判定，边界情况标记待复核</div>
+    <table>
+      <tr><th>姓名</th><th>部门</th><th>入职日期</th><th>导师</th><th>导师群</th><th>入职进展</th><th>试用期表现</th><th>答辩得分</th><th>转正结果</th></tr>
+      <tr>
+        <td>李工</td><td>算法组</td><td>02-10</td><td>王工（业务组指定）</td>
+        <td><span class="badge group-yes">已建群</span></td>
+        <td><span class="badge done">已转正</span></td>
+        <td><div class="perf-dots"><span class="dot ex"></span><span class="dot ex"></span></div></td>
+        <td>92</td>
+        <td><span class="badge excellent">优秀</span></td>
+      </tr>
+      <tr>
+        <td>周工</td><td>产品组</td><td>03-05</td><td>陈工（业务组指定）</td>
+        <td><span class="badge group-yes">已建群</span></td>
+        <td><span class="badge done">已转正</span></td>
+        <td><div class="perf-dots"><span class="dot ex"></span><span class="dot good"></span></div></td>
+        <td>85</td>
+        <td><span class="badge good">良好</span></td>
+      </tr>
+      <tr class="flagged">
+        <td>吴工</td><td>算法组</td><td>04-01</td><td>李工（业务组指定）</td>
+        <td><span class="badge group-yes">已建群</span></td>
+        <td><span class="badge done">已转正</span></td>
+        <td><div class="perf-dots"><span class="dot good"></span><span class="dot ex"></span></div></td>
+        <td>91</td>
+        <td>
+          <span class="badge review">待复核</span>
+          <div class="note-line flag">答辩分达标(91)，但试用期未连续两次EXCELLENT，未满足优秀门槛，是否维持良好需人工确认</div>
+        </td>
+      </tr>
+      <tr>
+        <td>赵工</td><td>运营组</td><td>05-12</td><td>—（待业务组指定）</td>
+        <td><span class="badge group-no">未建群</span></td>
+        <td><span class="badge stage">轮岗中</span></td>
+        <td><div class="perf-dots"><span class="dot ex"></span><span class="dot good"></span></div></td>
+        <td>—</td>
+        <td><span class="badge pending">待答辩</span></td>
+      </tr>
+      <tr>
+        <td>孙工</td><td>产品组</td><td>06-20</td><td>林工（业务组指定）</td>
+        <td><span class="badge group-yes">已建群</span></td>
+        <td><span class="badge stage">入职培训</span></td>
+        <td><div class="perf-dots"><span class="dot good"></span></div></td>
+        <td>—</td>
+        <td><span class="badge pending">未到评估期</span></td>
+      </tr>
+    </table>
+    <div class="rule-note">
+      转正评级规则：<code>试用期连续两次 EXCELLENT</code> 为优秀准入门槛，同时满足 <code>答辩得分 ≥ 90</code> 才评定优秀；<code>80–90</code> 为良好。仅满足其中一项（如分数达标但未拿满两次 EXCELLENT）— 标记为待复核，不自动判定。
+    </div>
+  </div>
+
+  <div class="escalation-strip">
+    <h2>本模块推送至统一升级仲裁收件箱的事项</h2>
+    <div class="esc-card">
+      <div class="esc-top"><span class="esc-tag">转正评级边界</span><span class="esc-time">今日 10:15</span></div>
+      <div class="esc-summary">吴工答辩得分 91 分已达优秀分数线，但试用期内仅 1 次 EXCELLENT，未满足"连续两次"准入门槛</div>
+      <div class="esc-decision">需要决策：是否按分数破例评定优秀，或维持良好评级</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

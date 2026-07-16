@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>部门经费管理台账 · 原型</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --ink:#1E2A38; --paper:#EEF1F0; --panel:#FFFFFF; --line:#D9DDDB; --slate:#5B6570;
+  --teal:#2F6F62; --teal-bg:#E4F0EC;
+  --amber:#C98A3E; --amber-bg:#FBF0E1;
+  --brick:#A64B3B; --brick-bg:#F7E8E5;
+  --violet:#5B5A9C; --violet-bg:#ECEBF5;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);font-family:'IBM Plex Sans',sans-serif;color:var(--ink);padding:40px 24px;}
+.wrap{max-width:1120px;margin:0 auto;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--slate);text-transform:uppercase;}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;margin:6px 0 4px;}
+.sub{color:var(--slate);font-size:14px;margin-bottom:22px;}
+
+.alert{
+  background:var(--brick); color:#fff; border-radius:4px; padding:14px 18px;
+  display:flex; justify-content:space-between; align-items:center; margin-bottom:22px;
+  font-size:13.5px;
+}
+.alert b{font-family:'Space Grotesk',sans-serif;}
+.alert .go{font-family:'IBM Plex Mono',monospace;font-size:11.5px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:3px;}
+
+.top-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-bottom:22px;}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:20px;}
+.panel h2{font-family:'Space Grotesk',sans-serif;font-size:15px;margin:0 0 14px;}
+
+.total-bar-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px;}
+.total-num{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;}
+.total-sub{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--slate);}
+.bar-track{height:14px;background:#EDEEEF;border-radius:7px;overflow:hidden;margin-bottom:6px;}
+.bar-fill{height:100%;background:var(--brick);}
+.bar-caption{font-size:11.5px;color:var(--slate);font-family:'IBM Plex Mono',monospace;}
+.note{font-size:11.5px;color:var(--slate);margin-top:10px;line-height:1.5;padding-top:10px;border-top:1px dashed var(--line);}
+
+.cat-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.cat-label{width:76px;font-size:12.5px;color:var(--slate);flex-shrink:0;}
+.cat-track{flex:1;height:10px;background:#EDEEEF;border-radius:5px;overflow:hidden;}
+.cat-fill{height:100%;border-radius:5px;}
+.cat-amt{width:74px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--slate);flex-shrink:0;}
+
+table{width:100%;border-collapse:collapse;font-size:12.5px;}
+th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--slate);font-weight:500;padding:8px 10px;border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.5px;}
+td{padding:10px;border-bottom:1px solid #EDEEEF;vertical-align:top;}
+tr.rejected td{background:var(--brick-bg);}
+.status{font-family:'IBM Plex Mono',monospace;font-size:10.5px;padding:2px 8px;border-radius:8px;display:inline-block;}
+.status.approved{background:var(--teal-bg);color:var(--teal);}
+.status.pending{background:var(--amber-bg);color:var(--amber);}
+.status.rejected{background:var(--brick);color:#fff;}
+.reason{font-size:11px;color:var(--brick);margin-top:3px;}
+.cat-tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--slate);}
+
+.escalation-strip{margin-top:22px;}
+.escalation-strip h2{font-family:'Space Grotesk',sans-serif;font-size:15px;margin:0 0 12px;}
+.esc-card{
+  background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--brick);
+  border-radius:4px;padding:14px 16px;margin-bottom:10px;
+}
+.esc-top{display:flex;justify-content:space-between;margin-bottom:6px;}
+.esc-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;background:var(--brick-bg);color:var(--brick);padding:2px 8px;border-radius:8px;}
+.esc-time{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--slate);}
+.esc-summary{font-size:13px;line-height:1.5;margin-bottom:4px;}
+.esc-decision{font-size:12px;color:var(--slate);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">MODULE — 场景六：经费管理</div>
+  <h1>部门经费管理台账</h1>
+  <div class="sub">固定总额下发，类别为统计口径而非审批边界；核心是记录、总额预警与审批留痕</div>
+
+  <div class="alert">
+    <div><b>⚠ 总预算即将用尽</b> — 当前剩余 7.6%（¥3,800 / ¥50,000），建议评估是否需要控制后续支出或申请追加</div>
+    <div class="go">已同步至统一升级仲裁收件箱</div>
+  </div>
+
+  <div class="top-grid">
+    <div class="panel">
+      <h2>总预算包使用情况</h2>
+      <div class="total-bar-row">
+        <div class="total-num">¥46,200 <span style="font-size:13px;color:var(--slate);font-weight:400;">/ ¥50,000</span></div>
+        <div class="total-sub">已使用 92.4%</div>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:92.4%"></div></div>
+      <div class="bar-caption">剩余 ¥3,800 · 按近三月月均支出速度，预计 9 天内用尽</div>
+      <div class="note">类别划分（仪式费/文体费/会议费等）仅用于统计和归档查阅，审批判定只看总额是否超出，类别之间可自由调配使用</div>
+    </div>
+
+    <div class="panel">
+      <h2>各类别支出分布（统计口径）</h2>
+      <div class="cat-row"><div class="cat-label">会议费</div><div class="cat-track"><div class="cat-fill" style="width:78%;background:var(--teal)"></div></div><div class="cat-amt">¥18,600</div></div>
+      <div class="cat-row"><div class="cat-label">文体费</div><div class="cat-track"><div class="cat-fill" style="width:56%;background:var(--amber)"></div></div><div class="cat-amt">¥13,400</div></div>
+      <div class="cat-row"><div class="cat-label">仪式费</div><div class="cat-track"><div class="cat-fill" style="width:44%;background:var(--violet)"></div></div><div class="cat-amt">¥10,200</div></div>
+      <div class="cat-row"><div class="cat-label">其他</div><div class="cat-track"><div class="cat-fill" style="width:16%;background:var(--slate)"></div></div><div class="cat-amt">¥4,000</div></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>支出台账</h2>
+    <table>
+      <tr><th>日期</th><th>类别</th><th>用途摘要</th><th>金额</th><th>提交人</th><th>发票状态</th><th>审批状态</th></tr>
+      <tr>
+        <td>07-14</td><td><span class="cat-tag">会议费</span></td><td>季度技术评审会场地租赁</td><td>¥3,200</td><td>周工</td><td>已上传</td>
+        <td><span class="status approved">经理已批</span></td>
+      </tr>
+      <tr>
+        <td>07-12</td><td><span class="cat-tag">文体费</span></td><td>部门团建活动物料</td><td>¥2,600</td><td>陈工</td><td>已上传</td>
+        <td><span class="status pending">待审批</span></td>
+      </tr>
+      <tr class="rejected">
+        <td>07-10</td><td><span class="cat-tag">仪式费</span></td><td>员工周年纪念礼品</td><td>¥1,800</td><td>吴工</td><td>已上传</td>
+        <td>
+          <span class="status rejected">已驳回</span>
+          <div class="reason">驳回理由：礼品金额超出个人纪念类单笔上限，建议改为部门集体名义采购</div>
+        </td>
+      </tr>
+      <tr>
+        <td>07-09</td><td><span class="cat-tag">会议费</span></td><td>外部专家评审差旅补贴</td><td>¥4,500</td><td>林工</td><td>已上传</td>
+        <td><span class="status approved">经理已批</span></td>
+      </tr>
+      <tr>
+        <td>07-08</td><td><span class="cat-tag">其他</span></td><td>部门茶水间物资补充</td><td>¥600</td><td>赵工</td><td>已上传</td>
+        <td><span class="status approved">经理已批</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="escalation-strip">
+    <h2>本模块推送至统一升级仲裁收件箱的事项</h2>
+    <div class="esc-card">
+      <div class="esc-top"><span class="esc-tag">总预算预警</span><span class="esc-time">今日 09:00</span></div>
+      <div class="esc-summary">总预算包剩余 7.6%（¥3,800），按当前支出速度预计 9 天内用尽</div>
+      <div class="esc-decision">需要决策：是否申请追加预算包，或对后续支出提高审批门槛</div>
+    </div>
+    <div class="esc-card">
+      <div class="esc-top"><span class="esc-tag">审批驳回记录</span><span class="esc-time">07-10 14:32</span></div>
+      <div class="esc-summary">吴工提交的「员工周年纪念礼品」（¥1,800）被经理驳回，理由：礼品金额超出个人纪念类单笔上限</div>
+      <div class="esc-decision">已同步驳回理由给提交人，台账中标记为驳回状态，供后续查阅统计</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

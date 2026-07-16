@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>员工生日关怀 · 原型</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --ink:#1E2A38; --paper:#EEF1F0; --panel:#FFFFFF; --line:#D9DDDB; --slate:#5B6570;
+  --teal:#2F6F62; --teal-bg:#E4F0EC;
+  --amber:#C98A3E; --amber-bg:#FBF0E1;
+  --rose:#B0576D; --rose-bg:#F5E9EC;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);font-family:'IBM Plex Sans',sans-serif;color:var(--ink);padding:40px 24px;}
+.wrap{max-width:1080px;margin:0 auto;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--slate);text-transform:uppercase;}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;margin:6px 0 4px;}
+.sub{color:var(--slate);font-size:14px;margin-bottom:22px;}
+
+.badge-note{
+  background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:14px 18px;
+  margin-bottom:22px;font-size:12.5px;color:var(--slate);line-height:1.6;
+}
+.badge-note b{color:var(--ink);}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:20px;margin-bottom:18px;}
+.panel h2{font-family:'Space Grotesk',sans-serif;font-size:15px;margin:0 0 4px;}
+.panel .desc{font-size:12px;color:var(--slate);margin-bottom:14px;}
+
+table{width:100%;border-collapse:collapse;font-size:12.5px;}
+th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--slate);font-weight:500;padding:8px 10px;border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.5px;}
+td{padding:9px 10px;border-bottom:1px solid #EDEEEF;vertical-align:top;}
+tr.skip td{background:var(--rose-bg);}
+
+.badge{font-family:'IBM Plex Mono',monospace;font-size:10.5px;padding:2px 8px;border-radius:8px;display:inline-block;}
+.badge.sent{background:var(--teal-bg);color:var(--teal);}
+.badge.today{background:var(--amber-bg);color:var(--amber);}
+.badge.upcoming{background:#EDEEEF;color:var(--slate);}
+.badge.skip{background:var(--rose);color:#fff;}
+
+.note-line{font-size:11px;color:var(--rose);margin-top:3px;}
+
+.escalation-strip h2{font-family:'Space Grotesk',sans-serif;font-size:15px;margin:0 0 12px;}
+.esc-card{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--rose);border-radius:4px;padding:14px 16px;margin-bottom:10px;}
+.esc-top{display:flex;justify-content:space-between;margin-bottom:6px;}
+.esc-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;background:var(--rose-bg);color:var(--rose);padding:2px 8px;border-radius:8px;}
+.esc-time{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--slate);}
+.esc-summary{font-size:13px;line-height:1.5;margin-bottom:4px;}
+.esc-decision{font-size:12px;color:var(--slate);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">MODULE — 场景三：员工生日关怀（轻量自动化模块）</div>
+  <h1>员工生日关怀</h1>
+  <div class="sub">定时触发的自动化任务，主要复用沟通编排层与看板渲染层，几乎不涉及仲裁判断</div>
+
+  <div class="badge-note">
+    这个模块跟其他模块不太一样：<b>没有候选生成、没有优先级评分</b>，本质是"到点自动发送祝福 + 抄送主管和经理 + 记录发送状态"。唯一需要人工确认的，是员工当天请假或已离职这类边界情况。
+  </div>
+
+  <div class="panel">
+    <h2>本月生日名单</h2>
+    <div class="desc">祝福消息将同步抄送本人主管与部门经理</div>
+    <table>
+      <tr><th>姓名</th><th>部门</th><th>生日</th><th>在职状态</th><th>处理状态</th></tr>
+      <tr>
+        <td>林工</td><td>产品组</td><td>07-08</td><td>在职</td>
+        <td><span class="badge sent">已发送 · 已抄送主管</span></td>
+      </tr>
+      <tr>
+        <td>王工</td><td>算法组</td><td>07-16</td><td>在职</td>
+        <td><span class="badge today">今日待发送</span></td>
+      </tr>
+      <tr class="skip">
+        <td>赵工</td><td>运营组</td><td>07-18</td><td>请假中（产假）</td>
+        <td>
+          <span class="badge skip">待确认</span>
+          <div class="note-line">员工当前请假中，是否仍按常规群祝福发送，或改为私信/延后处理需要确认</div>
+        </td>
+      </tr>
+      <tr>
+        <td>陈工</td><td>技术组</td><td>07-22</td><td>在职</td>
+        <td><span class="badge upcoming">即将到来</span></td>
+      </tr>
+      <tr>
+        <td>周工</td><td>产品组</td><td>07-27</td><td>在职</td>
+        <td><span class="badge upcoming">即将到来</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="escalation-strip">
+    <h2>本模块推送至统一升级仲裁收件箱的事项</h2>
+    <div class="esc-card">
+      <div class="esc-top"><span class="esc-tag">在职状态边界</span><span class="esc-time">今日 08:00</span></div>
+      <div class="esc-summary">赵工（07-18 生日）当前处于产假中，常规群祝福是否合适需要确认</div>
+      <div class="esc-decision">需要决策：按常规群祝福处理、改为私信问候，或本次跳过</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

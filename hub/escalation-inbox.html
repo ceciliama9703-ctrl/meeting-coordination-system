@@ -12,6 +12,10 @@
   --amber:#C98A3E; --amber-bg:#FBF0E1;
   --brick:#A64B3B; --brick-bg:#F7E8E5;
   --violet:#5B5A9C; --violet-bg:#ECEBF5;
+  --blue:#3D6EA5; --blue-bg:#E5EDF5;
+  --sky:#2E7DA6; --sky-bg:#E4EFF5;
+  --olive:#748233; --olive-bg:#EEF0E1;
+  --rose:#B0576D; --rose-bg:#F5E9EC;
 }
 *{box-sizing:border-box;}
 body{margin:0;background:var(--paper);font-family:'IBM Plex Sans',sans-serif;color:var(--ink);padding:40px 24px;}
@@ -43,6 +47,11 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;margin:
 .tag{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:2px 8px;border-radius:8px;}
 .tag.mod-meeting{background:var(--teal-bg);color:var(--teal);}
 .tag.mod-queue{background:var(--violet-bg);color:var(--violet);}
+.tag.mod-budget{background:var(--amber-bg);color:var(--amber);}
+.tag.mod-mentor{background:var(--blue-bg);color:var(--blue);}
+.tag.mod-info{background:var(--sky-bg);color:var(--sky);}
+.tag.mod-schedule{background:var(--olive-bg);color:var(--olive);}
+.tag.mod-birthday{background:var(--rose-bg);color:var(--rose);}
 .tag.urg-high{background:var(--brick-bg);color:var(--brick);}
 .tag.urg-mid{background:var(--amber-bg);color:var(--amber);}
 .tag.urg-low{background:#EDEEEF;color:var(--slate);}
@@ -117,6 +126,91 @@ const items = [
     resolved:false
   },
   {
+    id:"esc-0044", source_module:"schedule", source_label:"经理日程",
+    urgency:"low", created_at:"今日 11:20",
+    summary:"「XX项目跨部门协调会」邀请中经理为抄送角色，但该类会议历史上曾 2 次临时要求经理发言",
+    requested_decision:"本次是否仍可按规则隐藏，或保留在日历上以防万一",
+    deadline:"会议前确认",
+    candidates:[
+      {name:"本次仍按规则隐藏", note:"信任规则判断，节省经理时间"},
+      {name:"保留在日历上", note:"更稳妥，避免万一被要求发言时措手不及"}
+    ],
+    resolved:false
+  },
+  {
+    id:"esc-0043", source_module:"birthday", source_label:"生日关怀",
+    urgency:"low", created_at:"今日 08:00",
+    summary:"赵工（07-18 生日）当前处于产假中，常规群祝福是否合适需要确认",
+    requested_decision:"按常规群祝福处理、改为私信问候，或本次跳过",
+    deadline:"生日当天前确认",
+    candidates:[
+      {name:"改为私信问候", note:"更贴心，避免群内公开员工请假信息"},
+      {name:"维持常规群祝福", note:"保持一致性，但需确认当事人是否介意"},
+      {name:"本次跳过，返岗后补一句问候", note:"最稳妥但可能显得疏忽"}
+    ],
+    resolved:false
+  },
+  {
+    id:"esc-0042", source_module:"mentor", source_label:"新员工导师",
+    urgency:"mid", created_at:"今日 10:15",
+    summary:"吴工答辩得分 91 分已达优秀分数线，但试用期内仅 1 次 EXCELLENT，未满足「连续两次」准入门槛",
+    requested_decision:"是否按分数破例评定优秀，或维持良好评级",
+    deadline:"本周内确认",
+    candidates:[
+      {name:"维持良好评级，严格按准入门槛执行", note:"规则一致性最强，不开例外口子"},
+      {name:"破例评定优秀", note:"需说明破例理由并记录在案，避免影响后续评级一致性"}
+    ],
+    resolved:false
+  },
+  {
+    id:"esc-0041", source_module:"info", source_label:"信息收集反馈",
+    urgency:"high", created_at:"今日 08:30",
+    summary:"「Q3 安全知识测试」距截止不足 24 小时，反馈率仅 52%（26/50），已催办 2 轮",
+    requested_decision:"是否点名通报未反馈人员，或申请延长截止时间",
+    deadline:"今日内决策",
+    candidates:[
+      {name:"点名通报未反馈人员", note:"提升紧迫感，可能引起个别人不满"},
+      {name:"申请延长 24 小时", note:"需征得任务发起人同意，存在整体延期风险"}
+    ],
+    resolved:false
+  },
+  {
+    id:"esc-0038", source_module:"info", source_label:"信息收集反馈",
+    urgency:"high", created_at:"今日 09:05",
+    summary:"「新人转正答辩培训材料归档确认」已超期，催办 3 轮后反馈率仍仅 40%（4/10）",
+    requested_decision:"是否直接联系剩余未反馈人员上级，或调整归档要求",
+    deadline:"已超期，需尽快决策",
+    candidates:[
+      {name:"联系未反馈人员上级施压", note:"效果通常较好，但需要经理出面"},
+      {name:"简化归档要求，降低门槛", note:"更快达标，但可能影响材料完整性"}
+    ],
+    resolved:false
+  },
+  {
+    id:"esc-0035", source_module:"budget", source_label:"经费管理",
+    urgency:"high", created_at:"今日 09:00",
+    summary:"总预算包剩余 7.6%（¥3,800 / ¥50,000），按当前支出速度预计 9 天内用尽",
+    requested_decision:"是否申请追加预算包，或对后续支出提高审批门槛",
+    deadline:"建议 3 日内决策",
+    candidates:[
+      {name:"申请追加预算", note:"需走上级审批流程，耗时约 3-5 个工作日"},
+      {name:"提高后续审批门槛", note:"单笔超过 ¥1,000 需经理二次确认，控制消耗速度"},
+      {name:"维持现状，用尽为止", note:"风险：可能出现资金缺口需临时垫付"}
+    ],
+    resolved:false
+  },
+  {
+    id:"esc-0033", source_module:"budget", source_label:"经费管理",
+    urgency:"low", created_at:"07-10 14:32",
+    summary:"吴工提交的「员工周年纪念礼品」（¥1,800）被经理驳回，理由：礼品金额超出个人纪念类单笔上限",
+    requested_decision:"确认驳回理由已同步提交人，并记录入台账供后续查阅",
+    deadline:"已处理",
+    candidates:[
+      {name:"驳回理由已同步给吴工，台账标记为驳回状态", note:"已沉淀为规则：个人纪念类单笔金额设置上限，超出建议改为部门集体名义"}
+    ],
+    resolved:true
+  },
+  {
     id:"esc-0028", source_module:"meeting", source_label:"会议协调",
     urgency:"mid", created_at:"昨日 17:20",
     summary:"「季度架构评审」候选时段出席率达标，但组织者本人临时出差，是否算作有效出席存在争议",
@@ -148,6 +242,11 @@ const filters = [
   {key:"module", val:"all", label:"全部来源"},
   {key:"module", val:"meeting", label:"会议协调"},
   {key:"module", val:"queue", label:"时间申请仲裁"},
+  {key:"module", val:"budget", label:"经费管理"},
+  {key:"module", val:"mentor", label:"新员工导师"},
+  {key:"module", val:"info", label:"信息收集反馈"},
+  {key:"module", val:"schedule", label:"经理日程"},
+  {key:"module", val:"birthday", label:"生日关怀"},
   {key:"urgency", val:"all2", label:"全部紧急度"},
   {key:"urgency", val:"high", label:"高"},
   {key:"urgency", val:"mid", label:"中"},

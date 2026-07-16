@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>经理日程动态管理 · 原型</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --ink:#1E2A38; --paper:#EEF1F0; --panel:#FFFFFF; --line:#D9DDDB; --slate:#5B6570;
+  --teal:#2F6F62; --teal-bg:#E4F0EC;
+  --amber:#C98A3E; --amber-bg:#FBF0E1;
+  --brick:#A64B3B; --brick-bg:#F7E8E5;
+  --grey-bg:#EDEEEF;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);font-family:'IBM Plex Sans',sans-serif;color:var(--ink);padding:40px 24px;}
+.wrap{max-width:1160px;margin:0 auto;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--slate);text-transform:uppercase;}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;margin:6px 0 4px;}
+.sub{color:var(--slate);font-size:14px;margin-bottom:22px;}
+
+.legend{display:flex;gap:16px;margin-bottom:20px;font-size:12px;color:var(--slate);flex-wrap:wrap;}
+.legend span{display:inline-flex;align-items:center;gap:6px;}
+.dot{width:10px;height:10px;border-radius:2px;display:inline-block;}
+
+.cal{background:var(--panel);border:1px solid var(--line);border-radius:4px;overflow:hidden;margin-bottom:28px;}
+.cal-head{display:grid;grid-template-columns:70px repeat(5,1fr);border-bottom:1px solid var(--line);}
+.cal-head .d{padding:10px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--slate);border-left:1px solid var(--line);text-align:center;}
+.cal-head .d:first-child{border-left:none;}
+.cal-body{display:grid;grid-template-columns:70px repeat(5,1fr);}
+.hourlabel{padding:6px 8px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--slate);text-align:right;border-top:1px solid #F0F1F0;}
+.daycol{border-left:1px solid var(--line);position:relative;}
+.slotline{height:34px;border-top:1px solid #F0F1F0;}
+
+.evt{
+  position:absolute;left:4px;right:4px;border-radius:3px;padding:5px 7px;font-size:11px;
+  line-height:1.35;overflow:hidden;cursor:default;border:1px solid transparent;
+}
+.evt .t{font-family:'IBM Plex Mono',monospace;font-size:9.5px;opacity:.8;}
+.evt.accepted{background:var(--teal-bg);color:var(--teal);border-color:var(--teal);}
+.evt.declined{background:var(--grey-bg);color:var(--slate);text-decoration:line-through;opacity:.7;}
+.evt.locked{background:#E9EAF2;color:#5B5A9C;border-color:#5B5A9C;}
+.evt.escalate{background:var(--brick-bg);color:var(--brick);border-color:var(--brick);}
+
+.section-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;margin:8px 0 12px;}
+
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;align-items:start;}
+
+.log{background:var(--panel);border:1px solid var(--line);border-radius:4px;}
+.logitem{padding:12px 16px;border-bottom:1px solid var(--line);font-size:12.5px;display:flex;gap:10px;}
+.logitem:last-child{border-bottom:none;}
+.logitem .time{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--slate);white-space:nowrap;}
+.logitem .badge{font-family:'IBM Plex Mono',monospace;font-size:9.5px;padding:1px 6px;border-radius:6px;height:fit-content;white-space:nowrap;}
+.badge.auto{background:var(--teal-bg);color:var(--teal);}
+.badge.decline{background:var(--grey-bg);color:var(--slate);}
+.badge.esc{background:var(--brick-bg);color:var(--brick);}
+
+.escpanel{background:var(--panel);border:1px solid var(--brick);border-radius:4px;padding:16px;}
+.escpanel .h{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--brick);margin-bottom:10px;}
+.esccard{border:1px solid var(--line);border-radius:4px;padding:12px;margin-bottom:10px;font-size:12.5px;}
+.esccard:last-child{margin-bottom:0;}
+.esccard .s{font-weight:600;margin-bottom:6px;}
+.esccard .cands{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
+.esccard .c{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--line);border-radius:3px;padding:6px 10px;}
+.esccard .c button{font-family:'IBM Plex Mono',monospace;font-size:10.5px;background:var(--ink);color:#fff;border:none;border-radius:3px;padding:4px 9px;cursor:pointer;}
+
+.rules{margin-top:28px;background:var(--panel);border:1px solid var(--line);border-radius:4px;overflow:hidden;}
+.rules table{width:100%;border-collapse:collapse;font-size:12.5px;}
+.rules th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--slate);background:#F5F6F5;padding:10px 14px;border-bottom:1px solid var(--line);}
+.rules td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top;}
+.rules tr:last-child td{border-bottom:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">MODULE PROTOTYPE — 场景二延伸</div>
+  <h1>经理日程动态管理</h1>
+  <div class="sub">Agent 像真人一样实时处理新出现的日程：自动接受、自动谢绝、或升级人工判断</div>
+
+  <div class="legend">
+    <span><i class="dot" style="background:var(--teal-bg);border:1px solid var(--teal)"></i>Agent 自动接受</span>
+    <span><i class="dot" style="background:var(--grey-bg);border:1px solid var(--slate)"></i>Agent 自动谢绝（FYI/非必须）</span>
+    <span><i class="dot" style="background:#E9EAF2;border:1px solid #5B5A9C"></i>已锁定（出差/培训/活动）</span>
+    <span><i class="dot" style="background:var(--brick-bg);border:1px solid var(--brick)"></i>冲突升级，待人工判断</span>
+  </div>
+
+  <div class="cal">
+    <div class="cal-head">
+      <div class="d"></div>
+      <div class="d">周一 7/13</div>
+      <div class="d">周二 7/14</div>
+      <div class="d">周三 7/15</div>
+      <div class="d">周四 7/16</div>
+      <div class="d">周五 7/17</div>
+    </div>
+    <div class="cal-body" style="position:relative;">
+      <div>
+        <div class="hourlabel" style="height:34px;">09:00</div>
+        <div class="hourlabel" style="height:34px;">10:00</div>
+        <div class="hourlabel" style="height:34px;">11:00</div>
+        <div class="hourlabel" style="height:34px;">12:00</div>
+        <div class="hourlabel" style="height:34px;">13:00</div>
+        <div class="hourlabel" style="height:34px;">14:00</div>
+        <div class="hourlabel" style="height:34px;">15:00</div>
+        <div class="hourlabel" style="height:34px;">16:00</div>
+      </div>
+      <div class="daycol" style="height:272px;">
+        <div class="evt accepted" style="top:2px;height:64px;"><div class="t">09:00–10:30</div>晨会 + 项目同步</div>
+      </div>
+      <div class="daycol" style="height:272px;">
+        <div class="evt locked" style="top:2px;height:236px;"><div class="t">全天</div>出差 · 客户现场</div>
+        <div class="evt declined" style="top:100px;height:32px;"><div class="t">10:00–10:30</div>产品周会（仅抄送）</div>
+      </div>
+      <div class="daycol" style="height:272px;">
+        <div class="evt escalate" style="top:2px;height:32px;"><div class="t">09:00–09:30</div>空降：CEO 战略同步</div>
+        <div class="evt escalate" style="top:2px;height:32px;left:52%;"><div class="t">09:00–10:00</div>季度评审（已锁定两周）</div>
+        <div class="evt accepted" style="top:238px;height:32px;"><div class="t">15:00–15:30</div>预算审批会</div>
+      </div>
+      <div class="daycol" style="height:272px;">
+        <div class="evt locked" style="top:34px;height:100px;"><div class="t">10:00–13:00</div>管理培训</div>
+        <div class="evt declined" style="top:34px;height:32px;"><div class="t">10:00–10:30</div>跨部门同步（仅抄送）</div>
+      </div>
+      <div class="daycol" style="height:272px;">
+        <div class="evt accepted" style="top:170px;height:32px;"><div class="t">13:30–14:00</div>1:1 · 陈工</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <div class="section-title">Agent 处理日志</div>
+      <div class="log">
+        <div class="logitem"><span class="badge decline">自动谢绝</span><span class="time">07:41</span><span>"产品周会"标注仅抄送，与出差行程冲突，已自动谢绝并回复"出差中，请见会议纪要"</span></div>
+        <div class="logitem"><span class="badge decline">自动谢绝</span><span class="time">08:03</span><span>"跨部门同步"标注仅抄送，与管理培训冲突，已自动谢绝</span></div>
+        <div class="logitem"><span class="badge auto">自动接受</span><span class="time">08:20</span><span>"预算审批会"为必须出席事项，当前时段空闲，已自动接受</span></div>
+        <div class="logitem"><span class="badge esc">已升级</span><span class="time">08:55</span><span>"CEO 战略同步"（空降）与"季度评审"（已锁定两周、涉及多方专家）时间冲突，两者均判定为必须出席，无法自主决定，已生成升级请求</span></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-title">待处理升级</div>
+      <div class="escpanel">
+        <div class="h">esc-0041 · 高紧急</div>
+        <div class="esccard">
+          <div class="s">周三 09:00，"CEO 战略同步"（空降）与"季度评审"（已锁定两周，多方专家参与）时间冲突</div>
+          <div style="color:var(--slate);">需要决定：出席哪一场，另一场如何处理</div>
+          <div class="cands">
+            <div class="c"><span>接受 CEO 会议，季度评审委托副手主持并改期</span><button>选择</button></div>
+            <div class="c"><span>婉拒 CEO 会议改为会后单独同步，保留季度评审</span><button>选择</button></div>
+            <div class="c"><span>两场各出席前 15 分钟关键议程</span><button>选择</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rules">
+    <table>
+      <tr><th>新日程类型</th><th>与已有日程冲突时的默认动作</th></tr>
+      <tr><td>纯抄送 / FYI，无需发言或决策</td><td>自动谢绝新日程，保留原安排，无需请示</td></tr>
+      <tr><td>常规内部会议，非强制出席</td><td>自动谢绝（除非当前确实空闲）</td></tr>
+      <tr><td>空降紧急会议，明确要求出席/决策</td><td>自动接受，同时为被挤掉的原日程寻找替代方案</td></tr>
+      <tr><td>出差 / 培训 / 大型活动（提前锁定）</td><td>默认不可打断，新会议一律建议改期，除非新会议标注更高优先级</td></tr>
+      <tr><td>两个日程均判定为必须出席，时间冲突</td><td>升级人工判断</td></tr>
+      <tr><td>类型模糊，标注信息不足</td><td>升级人工判断，不猜测</td></tr>
+    </table>
+  </div>
+</div>
+</body>
+</html>

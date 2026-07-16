@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>信息收集与反馈看板 · 原型</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --ink:#1E2A38; --paper:#EEF1F0; --panel:#FFFFFF; --line:#D9DDDB; --slate:#5B6570;
+  --teal:#2F6F62; --teal-bg:#E4F0EC;
+  --amber:#C98A3E; --amber-bg:#FBF0E1;
+  --brick:#A64B3B; --brick-bg:#F7E8E5;
+  --violet:#5B5A9C; --violet-bg:#ECEBF5;
+  --sky:#2E7DA6; --sky-bg:#E4EFF5;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);font-family:'IBM Plex Sans',sans-serif;color:var(--ink);padding:40px 24px;}
+.wrap{max-width:1180px;margin:0 auto;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--slate);text-transform:uppercase;}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;margin:6px 0 4px;}
+.sub{color:var(--slate);font-size:14px;margin-bottom:22px;}
+
+.filters{display:flex;gap:10px;margin-bottom:20px;}
+.f{font-family:'IBM Plex Mono',monospace;font-size:12px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:7px 14px;color:var(--slate);}
+.f.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+.task-grid{display:flex;flex-direction:column;gap:14px;}
+.task{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:18px 20px;}
+.task-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.task-title{font-family:'Space Grotesk',sans-serif;font-size:15.5px;font-weight:700;}
+.task-type{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:2px 8px;border-radius:8px;margin-left:8px;}
+.task-type.general{background:var(--teal-bg);color:var(--teal);}
+.task-type.training{background:var(--sky-bg);color:var(--sky);}
+.task-deadline{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--slate);}
+
+.progress-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.bar-track{flex:1;height:12px;background:#EDEEEF;border-radius:6px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:6px;}
+.progress-num{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--slate);white-space:nowrap;}
+
+.meta-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--slate);}
+.rounds{font-family:'IBM Plex Mono',monospace;font-size:11px;}
+.pending-list{margin-top:8px;font-size:11.5px;color:var(--slate);}
+.pending-list b{color:var(--ink);}
+
+.escalate-banner{
+  margin-top:10px;padding:10px 12px;background:var(--brick-bg);color:var(--brick);
+  border-radius:3px;font-size:12px;display:flex;justify-content:space-between;align-items:center;
+}
+.status-ok{color:var(--teal);font-size:12px;font-family:'IBM Plex Mono',monospace;margin-top:8px;}
+
+.escalation-strip{margin-top:26px;}
+.escalation-strip h2{font-family:'Space Grotesk',sans-serif;font-size:15px;margin:0 0 12px;}
+.esc-card{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--brick);border-radius:4px;padding:14px 16px;margin-bottom:10px;}
+.esc-top{display:flex;justify-content:space-between;margin-bottom:6px;}
+.esc-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;background:var(--brick-bg);color:var(--brick);padding:2px 8px;border-radius:8px;}
+.esc-time{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--slate);}
+.esc-summary{font-size:13px;line-height:1.5;margin-bottom:4px;}
+.esc-decision{font-size:12px;color:var(--slate);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">MODULE — 场景一：信息收集与反馈（含培训课程反馈）</div>
+  <h1>信息收集与反馈看板</h1>
+  <div class="sub">多任务并行催办与反馈进度追踪，结构复用会议协调模块的分级沟通与升级机制</div>
+
+  <div class="filters">
+    <div class="f active">全部任务</div>
+    <div class="f">通用信息收集</div>
+    <div class="f">培训课程反馈</div>
+    <div class="f">需要关注</div>
+  </div>
+
+  <div class="task-grid">
+
+    <div class="task">
+      <div class="task-top">
+        <div><span class="task-title">Q3 安全知识测试</span><span class="task-type general">通用收集</span></div>
+        <div class="task-deadline">截止：明日 18:00</div>
+      </div>
+      <div class="progress-row">
+        <div class="bar-track"><div class="bar-fill" style="width:52%;background:var(--brick)"></div></div>
+        <div class="progress-num">26 / 50 已反馈</div>
+      </div>
+      <div class="meta-row">
+        <div>已催办 <span class="rounds">2</span> 轮</div>
+        <div>反馈率 52%</div>
+      </div>
+      <div class="pending-list">未反馈：<b>周工、林工、赵工</b> 等 24 人</div>
+      <div class="escalate-banner">
+        <span>⚠ 距截止 <24h，反馈率未达 80% 阈值，已升级至统一收件箱</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;">esc-0041</span>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-top">
+        <div><span class="task-title">「AI工具使用」培训课程反馈收集</span><span class="task-type training">培训反馈</span></div>
+        <div class="task-deadline">截止：3 天后</div>
+      </div>
+      <div class="progress-row">
+        <div class="bar-track"><div class="bar-fill" style="width:78%;background:var(--sky)"></div></div>
+        <div class="progress-num">31 / 40 已反馈</div>
+      </div>
+      <div class="meta-row">
+        <div>已催办 <span class="rounds">1</span> 轮</div>
+        <div>反馈率 78%</div>
+      </div>
+      <div class="pending-list">未反馈：<b>陈工、吴工</b> 等 9 人</div>
+      <div class="status-ok">✓ 进度正常，未达升级阈值</div>
+    </div>
+
+    <div class="task">
+      <div class="task-top">
+        <div><span class="task-title">年度福利意向调研</span><span class="task-type general">通用收集</span></div>
+        <div class="task-deadline">截止：7 天后</div>
+      </div>
+      <div class="progress-row">
+        <div class="bar-track"><div class="bar-fill" style="width:95%;background:var(--teal)"></div></div>
+        <div class="progress-num">57 / 60 已反馈</div>
+      </div>
+      <div class="meta-row">
+        <div>已催办 <span class="rounds">1</span> 轮</div>
+        <div>反馈率 95%</div>
+      </div>
+      <div class="status-ok">✓ 接近全员反馈，无需继续催办</div>
+    </div>
+
+    <div class="task">
+      <div class="task-top">
+        <div><span class="task-title">「新人转正答辩」培训材料归档确认</span><span class="task-type training">培训反馈</span></div>
+        <div class="task-deadline">截止：昨日 18:00（已超期）</div>
+      </div>
+      <div class="progress-row">
+        <div class="bar-track"><div class="bar-fill" style="width:40%;background:var(--brick)"></div></div>
+        <div class="progress-num">4 / 10 已反馈</div>
+      </div>
+      <div class="meta-row">
+        <div>已催办 <span class="rounds">3</span> 轮</div>
+        <div>反馈率 40%</div>
+      </div>
+      <div class="pending-list">未反馈：<b>王工、李工</b> 等 6 人</div>
+      <div class="escalate-banner">
+        <span>⚠ 已超期且催办 3 轮仍未达标，已升级至统一收件箱</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;">esc-0038</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="escalation-strip">
+    <h2>本模块推送至统一升级仲裁收件箱的事项</h2>
+    <div class="esc-card">
+      <div class="esc-top"><span class="esc-tag">反馈率未达标</span><span class="esc-time">今日 08:30</span></div>
+      <div class="esc-summary">「Q3 安全知识测试」距截止不足 24 小时，反馈率仅 52%（26/50），已催办 2 轮</div>
+      <div class="esc-decision">需要决策：是否点名通报未反馈人员，或申请延长截止时间</div>
+    </div>
+    <div class="esc-card">
+      <div class="esc-top"><span class="esc-tag">超期未达标</span><span class="esc-time">今日 09:05</span></div>
+      <div class="esc-summary">「新人转正答辩培训材料归档确认」已超期，催办 3 轮后反馈率仍仅 40%（4/10）</div>
+      <div class="esc-decision">需要决策：是否直接联系剩余未反馈人员上级，或调整归档要求</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
